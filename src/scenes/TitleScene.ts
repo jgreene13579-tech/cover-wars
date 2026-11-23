@@ -7,6 +7,7 @@ import { txt } from '../ui/text';
 import { Music } from '../audio/Music';
 import { unlockAudio } from '../audio/Synth';
 import { backdrop } from './backdrop';
+import { openFeedback } from '../ui/feedbackForm';
 
 export class TitleScene extends Phaser.Scene {
   constructor() { super('Title'); }
@@ -40,7 +41,8 @@ export class TitleScene extends Phaser.Scene {
     txt(this, GAME_W / 2 - 90, 280, 'THE NORMAL TOUR', 8, css(COLORS.gray)).setOrigin(0.5, 0);
     txt(this, GAME_W / 2 + 90, 280, 'FALLEN SONGS STAY GONE', 8, css(COLORS.red)).setOrigin(0.5, 0);
     txt(this, GAME_W / 2 + 90, 291, '+30% COINS', 8, css(COLORS.red)).setOrigin(0.5, 0);
-    new Button(this, GAME_W / 2 - 80, 308, 160, 20, `SHOP${isHardcore() ? ' (HARDCORE)' : ''}`, () => { unlockAudio(); this.scene.start('Shop'); });
+    new Button(this, GAME_W / 2 - 170, 308, 160, 20, `SHOP${isHardcore() ? ' (HARDCORE)' : ''}`, () => { unlockAudio(); this.scene.start('Shop'); });
+    new Button(this, GAME_W / 2 + 10, 308, 160, 20, 'SEND FEEDBACK', () => openFeedback(this.game), { border: COLORS.cyan });
 
     txt(this, 10, 10, `COINS ${save.coins}${isHardcore() ? '  (HARDCORE RUN)' : ''}`, 8, isHardcore() ? css(COLORS.red) : css(COLORS.gold));
     // tappable mute (phones have no M key); keyboard players get the battle shortcuts
