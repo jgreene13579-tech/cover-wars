@@ -21,11 +21,18 @@
       canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
       #loading { position: fixed; inset: 0; display: grid; place-items: center; color: #ff4fa3;
         font-family: "Press Start 2P", monospace; font-size: 12px; letter-spacing: 1px; }
+      /* phones held upright: the game is landscape, so ask for a turn */
+      #rotate { display: none; }
+      @media (orientation: portrait) and (pointer: coarse) {
+        #rotate { display: grid; position: fixed; inset: 0; z-index: 10; place-items: center; text-align: center;
+          background: #0b0710; color: #ff4fa3; font-family: "Press Start 2P", monospace; font-size: 14px; line-height: 2; padding: 24px; }
+      }
     </style>
   </head>
   <body>
     <div id="loading">LOADING...</div>
     <div id="game"></div>
+    <div id="rotate">TURN YOUR PHONE SIDEWAYS<br />TO PLAY</div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

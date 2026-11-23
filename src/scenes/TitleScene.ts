@@ -30,19 +30,26 @@ export class TitleScene extends Phaser.Scene {
     const band = CHARACTERS.filter((c) => save.unlocked.includes(c.id)).slice(0, 7);
     band.forEach((c, i) => {
       const x = GAME_W / 2 + (i - (band.length - 1) / 2) * 72;
-      const s = this.add.sprite(x, 262, c.id, 'f0').setOrigin(0.5, 1).setScale(3);
+      const s = this.add.sprite(x, 236, c.id, 'f0').setOrigin(0.5, 1).setScale(3);
       s.play({ key: `${c.id}-idle`, startFrame: i % 2 });
     });
 
     const go = (mode: Mode, key: string) => { unlockAudio(); setMode(mode); this.scene.start(key); };
-    new Button(this, GAME_W / 2 - 170, 274, 160, 28, 'PLAY', () => go('normal', 'Tour'), { size: 16, fill: 0x5a1838, border: COLORS.pink });
-    new Button(this, GAME_W / 2 + 10, 274, 160, 28, 'HARDCORE', () => go('hardcore', 'Tour'), { size: 16, fill: 0x3a0a14, border: COLORS.red });
-    txt(this, GAME_W / 2 + 90, 305, 'FALLEN SONGS ARE GONE FOR GOOD. +30% COINS.', 8, css(COLORS.red)).setOrigin(0.5, 0).setScale(0.7);
-    new Button(this, GAME_W / 2 - 80, 318, 160, 20, `SHOP${isHardcore() ? ' (HARDCORE)' : ''}`, () => { unlockAudio(); this.scene.start('Shop'); });
+    new Button(this, GAME_W / 2 - 170, 246, 160, 28, 'PLAY', () => go('normal', 'Tour'), { size: 16, fill: 0x5a1838, border: COLORS.pink });
+    new Button(this, GAME_W / 2 + 10, 246, 160, 28, 'HARDCORE', () => go('hardcore', 'Tour'), { size: 16, fill: 0x3a0a14, border: COLORS.red });
+    txt(this, GAME_W / 2 - 90, 280, 'THE NORMAL TOUR', 8, css(COLORS.gray)).setOrigin(0.5, 0);
+    txt(this, GAME_W / 2 + 90, 280, 'FALLEN SONGS STAY GONE', 8, css(COLORS.red)).setOrigin(0.5, 0);
+    txt(this, GAME_W / 2 + 90, 291, '+30% COINS', 8, css(COLORS.red)).setOrigin(0.5, 0);
+    new Button(this, GAME_W / 2 - 80, 308, 160, 20, `SHOP${isHardcore() ? ' (HARDCORE)' : ''}`, () => { unlockAudio(); this.scene.start('Shop'); });
 
     txt(this, 10, 10, `COINS ${save.coins}${isHardcore() ? '  (HARDCORE RUN)' : ''}`, 8, isHardcore() ? css(COLORS.red) : css(COLORS.gold));
-    txt(this, GAME_W - 10, 10, 'M: MUTE', 8, css(COLORS.gray)).setOrigin(1, 0);
-    txt(this, GAME_W / 2, 346, 'BATTLE KEYS: 1 SHOOT  2 SPECIAL  TAB NEXT  ENTER END TURN', 8, css(COLORS.gray)).setOrigin(0.5);
+    // tappable mute (phones have no M key); keyboard players get the battle shortcuts
+    const touch = this.sys.game.device.input.touch;
+    const muteLabel = () => (Music.muted ? 'SOUND: OFF' : 'SOUND: ON') + (touch ? '' : ' (M)');
+    const mute = txt(this, GAME_W - 10, 10, muteLabel(), 8, css(COLORS.gray)).setOrigin(1, 0)
+      .setInteractive({ useHandCursor: true }).on('pointerdown', () => { unlockAudio(); Music.toggleMute(this.game); mute.setText(muteLabel()); });
+    this.input.keyboard?.on('keydown-M', () => this.time.delayedCall(0, () => mute.setText(muteLabel())));
+    if (!touch) txt(this, GAME_W / 2, 346, 'BATTLE KEYS: 1 SHOOT  2 SPECIAL  TAB NEXT  ENTER END TURN', 8, css(COLORS.gray)).setOrigin(0.5);
 
     // browsers only allow sound after the first click
     this.input.once('pointerdown', () => { unlockAudio(); Music.menu(this); });

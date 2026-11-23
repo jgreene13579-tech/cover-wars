@@ -53,7 +53,7 @@ type TutEvent = 'start' | 'select' | 'move' | 'aim' | 'shoot' | 'special' | 'end
 /** The Eagles Lodge lesson, one step at a time: each tip shows once the step before it happens. */
 const TUTORIAL: { on: TutEvent; text: string }[] = [
   { on: 'start', text: 'YOUR FIRST SONG IS SELECTED (TAB SWITCHES). BLUE TILES COST ONE ACTION, GOLD TILES ARE A DASH THAT USES BOTH. MOVE NEXT TO A TABLE OR CHAIR.' },
-  { on: 'move', text: 'SEE THE SHIELDS? HALF SHIELD = HALF COVER (-20 TO HIT YOU). FULL SHIELD = FULL COVER (-40). NOW CLICK AN ENEMY TO AIM.' },
+  { on: 'move', text: 'SEE THE SHIELDS? HALF SHIELD = HALF COVER (-20 TO HIT YOU). FULL SHIELD = FULL COVER (-40). NOW PICK AN ENEMY TO AIM.' },
   { on: 'aim', text: 'THE PANEL SHOWS HIT %, CRIT % AND DAMAGE. DISTANCE AND COVER LOWER YOUR ODDS. NO COVER = FLANKED = BIG CRITS. PRESS FIRE.' },
   { on: 'shoot', text: "SHOOTING ENDS THAT SONG'S TURN. SELECT ANOTHER SONG AND TRY ITS SPECIAL (BUTTON OR KEY 2). SPECIALS RECHARGE OVER A FEW TURNS." },
   { on: 'special', text: 'WHEN EVERYONE IS OUT OF ACTIONS, THE TURN ENDS BY ITSELF. YOU CAN ALSO PRESS END TURN EARLY.' },
@@ -98,6 +98,8 @@ export class MissionScene extends Phaser.Scene {
   reach: Map<string, ReachNode> | null = null;
   hover: Pos | null = null;
   touchPreview: string | null = null;
+  /** Where a tap skips the pre-show conversation. */
+  skipZone: Phaser.Geom.Rectangle | null = null;
   kills = 0;
   killsBy: Record<string, number> = {}; // knockouts per band member, for XP
   baseAp = 2; // actions per turn (3 with the Extra Action upgrade)
@@ -798,7 +800,7 @@ export class MissionScene extends Phaser.Scene {
           info = [hv.name, `HP ${hv.hp}/${hv.maxHp}`, hv.active ? '' : 'UNAWARE'];
           infoColor = css(COLORS.red);
         } else if (u.ap > 0) {
-          info = ['CLICK A TILE', 'TO MOVE, OR AN', 'ENEMY TO AIM.'];
+          info = [this.sys.game.device.input.touch ? 'TAP A TILE' : 'CLICK A TILE', 'TO MOVE, OR AN', 'ENEMY TO AIM.'];
           if (this.touchPreview) info = ['TAP AGAIN', 'TO MOVE.'];
         } else info = ['OUT OF ACTIONS.'];
       }
@@ -2018,7 +2020,10 @@ export class MissionScene extends Phaser.Scene {
     const body = txt(this, 70, 222, '', 8).setDepth(D + 1).setWordWrapWidth(552).setLineSpacing(5);
     const more = txt(this, 620, 270, '>', 8, css(COLORS.cyan)).setOrigin(1, 1).setDepth(D + 1);
     this.tweens.add({ targets: more, alpha: 0.2, duration: 400, yoyo: true, repeat: -1 });
-    const skip = txt(this, 620, 204, 'ESC: SKIP', 8, css(COLORS.gray)).setOrigin(1, 0).setDepth(D + 1).setScale(0.75);
+    const touch = this.sys.game.device.input.touch;
+    const skip = txt(this, 620, 204, touch ? 'SKIP >>' : 'ESC: SKIP', 8, css(COLORS.gray)).setOrigin(1, 0).setDepth(D + 1);
+    // tapping the label skips the whole scene (phones have no ESC key)
+    this.skipZone = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(skip.getBounds()), 10, 8);
     const parts = [box, frame, portrait, name, body, more, skip];
 
     const band = this.players()[0];
@@ -2041,6 +2046,7 @@ export class MissionScene extends Phaser.Scene {
       if (!skipped && shown < line.text.length) { timer.remove(); body.setText(line.text); r = await this.waitPress(); if (r === 'skip') skipped = true; }
       timer.remove();
     }
+    this.skipZone = null;
     parts.forEach((p) => p.destroy());
     if (npc && guest && sc.leaves) {
       const g = guest;
@@ -2060,7 +2066,7 @@ export class MissionScene extends Phaser.Scene {
         kb?.off('keydown-SPACE', onNext); kb?.off('keydown-ENTER', onNext); kb?.off('keydown-ESC', onSkip);
         resolve(r);
       };
-      const onNext = () => finish('next');
+      const onNext = (p?: Phaser.Input.Pointer) => finish(p?.x !== undefined && this.skipZone?.contains(p.x, p.y) ? 'skip' : 'next');
       const onSkip = () => finish('skip');
       // ignore the click that might still be in flight
       this.time.delayedCall(120, () => {
@@ -2129,9 +2135,15 @@ export class MissionScene extends Phaser.Scene {
       line(`SPECIAL: ${c.special.name}`, css(COLORS.gold), 2);
       line(`${c.special.desc.toUpperCase()}${c.special.cooldown ? ` RECHARGES IN ${c.special.cooldown} TURNS.` : ""}`, '#ffffff', 0);
     }
-    add(txt(this, 320, 262, 'CLICK TO CONTINUE   ESC: SKIP ALL', 8, css(COLORS.gray)).setOrigin(0.5, 1).setDepth(D + 1).setScale(0.75));
+    const touch = this.sys.game.device.input.touch;
+    add(txt(this, 320, 262, touch ? 'TAP TO CONTINUE' : 'CLICK TO CONTINUE   ESC: SKIP ALL', 8, css(COLORS.gray)).setOrigin(0.5, 1).setDepth(D + 1).setScale(0.75));
+    if (touch) {
+      const skipAll = add(txt(this, 532, 264, 'SKIP ALL >>', 8, css(COLORS.gray)).setOrigin(1, 1).setDepth(D + 1));
+      this.skipZone = Phaser.Geom.Rectangle.Inflate(Phaser.Geom.Rectangle.Clone(skipAll.getBounds()), 10, 8);
+    }
     sfx.select();
     const r = await this.waitPress();
+    this.skipZone = null;
     parts.forEach((p) => p.destroy());
     return r;
   }

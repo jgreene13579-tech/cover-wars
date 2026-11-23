@@ -92,11 +92,11 @@ export class DetailPanel {
     }
 
     const c = item.c;
-    const spr = add(s.add.sprite(x + 24, y + 64, c.id, 'f0').setOrigin(0.5, 1).setScale(3));
+    const spr = add(s.add.sprite(x + 25, y + 60, c.id, 'f0').setOrigin(0.5, 1).setScale(2));
     if (c.listen) {
       // real link to the song: opened on pointerup so the browser treats it as a click
-      const lb = add(s.add.rectangle(x - 2, y + 64, 52, 10, 0x1db954).setOrigin(0).setStrokeStyle(1, 0x0b0710));
-      add(txt(s, x + 24, y + 69, 'LISTEN', 8, '#0b0710').setOrigin(0.5).setScale(0.75));
+      const lb = add(s.add.rectangle(x - 1, y + 63, 52, 10, 0x1db954).setOrigin(0).setStrokeStyle(1, 0x0b0710));
+      add(txt(s, x + 25, y + 68, 'LISTEN', 8, '#0b0710').setOrigin(0.5).setScale(0.75));
       lb.setInteractive({ useHandCursor: true }).on('pointerup', () => openLink(c.listen!));
     }
     spr.play(`${c.id}-idle`);
@@ -112,7 +112,7 @@ export class DetailPanel {
       add(s.add.rectangle(bx, y + 54, bw, 4, 0x0b0710).setOrigin(0));
       add(s.add.rectangle(bx, y + 54, Math.round(bw * (prog?.xp ?? 0) / xpToNext(lvl)), 4, COLORS.cyan).setOrigin(0));
     }
-    let ty = y + 74;
+    let ty = y + 80;
     const hp = st.hp + bonusHp(save);
     add(txt(s, x, ty, `HP ${hp}  AIM ${st.aim}  MOVE ${c.move}`, 8, hp !== c.hp || st.aim !== c.aim ? css(COLORS.green) : '#c8c0d8')); ty += 16;
     add(txt(s, x, ty, c.weapon.name, 8)); ty += 12;
@@ -125,8 +125,13 @@ export class DetailPanel {
     ty += 6;
     const sp = add(txt(s, x, ty, `${c.special.name}`, 8, css(COLORS.gold)).setWordWrapWidth(wrapW, true));
     ty += sp.height + 4;
-    add(txt(s, x, ty, `${c.special.desc.toUpperCase()}${c.special.cooldown ? ` COOLDOWN ${c.special.cooldown}.` : ""}`, 8, css(COLORS.gray))
+    const desc = add(txt(s, x, ty, `${c.special.desc.toUpperCase()}${c.special.cooldown ? ` COOLDOWN ${c.special.cooldown}.` : ''}`, 8, css(COLORS.gray))
       .setWordWrapWidth(wrapW, true).setLineSpacing(4));
+    // long descriptions shrink to stay clear of the footer and the shop's BUY button
+    const room = this.y + PANEL_H - (footer ? 54 : 34) - ty;
+    for (let k = 0.95; desc.displayHeight > room && k >= 0.6; k -= 0.05) {
+      desc.setScale(k).setWordWrapWidth(wrapW / k, true).setLineSpacing(3);
+    }
     if (footer) add(txt(s, PANEL_X + PANEL_W / 2, this.y + PANEL_H - 50, footer, 8, footerColor).setOrigin(0.5, 0));
   }
 }
