@@ -27,7 +27,7 @@ export const STAT_LABEL: Record<StatPick, { name: string; gain: string }> = {
 };
 
 /** XP for one show: win or lose, plus knockouts; going down halves it. */
-export const XP = { win: 100, loss: 40, perKill: 25, downedMult: 0.5 };
+export const XP = { win: 100, loss: 40, perKill: 44, downedMult: 0.5 };
 
 export const freshProgress = (): CharProgress => ({ xp: 0, level: 1, atk: 0, aim: 0, hp: 0, picks: 0 });
 
