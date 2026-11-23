@@ -10,6 +10,7 @@ import { SquadScene } from './scenes/SquadScene';
 import { ShopScene } from './scenes/ShopScene';
 import { MissionScene } from './scenes/MissionScene';
 import { ResultsScene } from './scenes/ResultsScene';
+import { LevelUpScene } from './scenes/LevelUpScene';
 
 /** True if a band file exists (checked by content type so a missing file never breaks the game). */
 async function exists(url: string, type: 'audio' | 'image') {
@@ -51,7 +52,7 @@ async function start() {
     roundPixels: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
     input: { activePointers: 2 },
-    scene: [BootScene, TitleScene, TourScene, SquadScene, ShopScene, MissionScene, ResultsScene],
+    scene: [BootScene, TitleScene, TourScene, SquadScene, ShopScene, MissionScene, ResultsScene, LevelUpScene],
   });
 
   if (import.meta.env.DEV) (window as unknown as { __game: Phaser.Game }).__game = game;

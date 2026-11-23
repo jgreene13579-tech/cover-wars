@@ -1,10 +1,12 @@
 import { CHARACTERS } from './data/characters';
+import { freshProgress, type CharProgress } from './data/progress';
 
 export interface SaveData {
   coins: number;
   unlocked: string[];
   wins: number;
   cleared: number; // how many tour stops are done; the next one is unlocked
+  progress: Record<string, CharProgress>; // XP, level and level-up picks per song
 }
 
 const KEY = 'mb-cover-wars-save-v1';
@@ -14,6 +16,7 @@ const defaults = (): SaveData => ({
   unlocked: CHARACTERS.filter((c) => c.startsUnlocked).map((c) => c.id),
   wins: 0,
   cleared: 0,
+  progress: {},
 });
 
 export function loadSave(): SaveData {
@@ -59,4 +62,14 @@ export function markSeen(ids: string[]) {
   } catch {
     /* ignore */
   }
+}
+
+/** A song's progress record (created on first use). */
+export function progressFor(save: SaveData, id: string): CharProgress {
+  return (save.progress[id] ??= freshProgress());
+}
+
+/** Songs with level-ups still waiting for a stat pick. */
+export function pendingLevelUps(save: SaveData): string[] {
+  return Object.entries(save.progress).filter(([, p]) => p.picks > 0).map(([id]) => id);
 }

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { COLORS, GAME_W, css } from '../config';
 import { CHARACTERS } from '../data/characters';
 import { MISSIONS } from '../data/missions';
-import { loadSave } from '../save';
+import { loadSave, pendingLevelUps } from '../save';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
 import { DetailPanel, RosterCard, rosterGrid } from '../ui/Roster';
@@ -27,8 +27,12 @@ export class SquadScene extends Phaser.Scene {
   constructor() { super('Squad'); }
 
   create(data: { mission?: number }) {
-    backdrop(this);
     const save = loadSave();
+    if (pendingLevelUps(save).length) {
+      this.scene.start('LevelUp', { next: { key: 'Squad', data } });
+      return;
+    }
+    backdrop(this);
     this.mission = data?.mission ?? Math.min(save.cleared, MISSIONS.length - 1);
     this.owned = new Set(save.unlocked);
     const remembered = SquadScene.lastSquad.filter((id) => this.owned.has(id));

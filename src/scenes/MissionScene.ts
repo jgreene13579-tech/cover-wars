@@ -10,7 +10,8 @@ import { BAND_COMEBACKS, ENEMIES, FREED_LINES, HYPNO_LINES } from '../data/enemi
 import { ENEMY_CHARS, MISSIONS, MissionDef, Scene as ShowScene, mapTiles } from '../data/missions';
 import { NPCS } from '../data/npcs';
 import { ENEMY_INTROS } from '../data/intros';
-import { loadSeen, markSeen } from '../save';
+import { loadSave, loadSeen, markSeen } from '../save';
+import { boostedStats, enemyVeterancy } from '../data/progress';
 import { THEMES, Theme, buildVenue, venueTile } from '../art/venues';
 import { Hud, HudState } from '../ui/Hud';
 import { txt } from '../ui/text';
@@ -87,6 +88,7 @@ export class MissionScene extends Phaser.Scene {
   hover: Pos | null = null;
   touchPreview: string | null = null;
   kills = 0;
+  killsBy: Record<string, number> = {}; // knockouts per band member, for XP
   squad: string[] = [];
   missionIndex = 0;
   mission!: MissionDef;
@@ -115,6 +117,7 @@ export class MissionScene extends Phaser.Scene {
     this.hover = null;
     this.touchPreview = null;
     this.kills = 0;
+    this.killsBy = {};
   }
 
   // ================================================================ setup
@@ -173,6 +176,8 @@ export class MissionScene extends Phaser.Scene {
 
     // spawn
     const spawns: Pos[] = [];
+    const vet = enemyVeterancy(this.missionIndex);
+    const save = loadSave();
     rows.forEach((r, y) => [...r].forEach((ch, x) => {
       if (ch === 'P') spawns.push({ x, y });
       const eid = ENEMY_CHARS[ch];
@@ -181,15 +186,16 @@ export class MissionScene extends Phaser.Scene {
         this.units.push(new Unit(this, this.world, {
           id: d.id, team: 'enemy', name: d.name,
           archetype: { boss: 'BOSS', tank: 'TANK', elite: 'ELITE COVER', legend: 'LEGENDARY COVER', basic: 'COVER SONG' }[d.tier],
-          hp: d.hp, aim: d.aim, move: d.move, weapon: d.weapon, tex: `enemy-${d.id}`, x, y, boss: d.boss,
+          hp: d.hp + vet.hp, aim: d.aim + vet.aim, move: d.move, weapon: d.weapon, tex: `enemy-${d.id}`, x, y, boss: d.boss,
         }));
       }
     }));
     this.squad.slice(0, spawns.length).forEach((id, i) => {
       const c = getCharacter(id);
+      const st = boostedStats(c, save.progress[id]);
       this.units.push(new Unit(this, this.world, {
         id: c.id, team: 'player', name: c.short, archetype: c.archetype,
-        hp: c.hp, aim: c.aim, move: c.move, weapon: c.weapon, special: c.special,
+        hp: st.hp, aim: st.aim, move: c.move, weapon: st.weapon, special: c.special,
         tex: c.id, x: spawns[i].x, y: spawns[i].y, idleFx: c.idleFx,
       }));
     });
@@ -1239,6 +1245,7 @@ export class MissionScene extends Phaser.Scene {
     this.tweens.add({ targets: u.sprite, angle: u.sprite.flipX ? -90 : 90, alpha: 0.6, y: u.sprite.y + 2, duration: 320, ease: 'Quad.easeIn' });
     this.popup({ x: u.sprite.x, y: u.sprite.y - 22 }, u.isPlayer ? 'DOWN!' : 'K.O.!', u.isPlayer ? css(COLORS.red) : css(COLORS.gold));
     if (!u.isPlayer) this.kills++;
+    if (!u.isPlayer && this.lastShooter?.isPlayer) this.killsBy[this.lastShooter.id] = (this.killsBy[this.lastShooter.id] ?? 0) + 1;
     if (this.selected === u) this.selected = null;
     const killer = this.lastShooter;
     if (!u.isPlayer && killer?.isPlayer && killer.alive && !this.quietComebacks) {
@@ -1824,6 +1831,7 @@ export class MissionScene extends Phaser.Scene {
     this.tutorialHide();
     this.time.delayedCall(2300, () => this.scene.start('Results', {
       victory, kills: this.kills, survivors: band, turns: this.turn, squad: this.squad, mission: this.missionIndex,
+      killsBy: { ...this.killsBy }, downed: this.squad.filter((id) => !this.units.some((u) => u.id === id && u.isPlayer && !u.decoy && u.alive)),
     }));
     return true;
   }
