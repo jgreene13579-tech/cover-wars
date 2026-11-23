@@ -133,69 +133,23 @@ export function armBody(top: string[], kind: GunKind, pad: number): string[] {
   return armBodyWith(top, GUN_ART[kind], pad);
 }
 
-/** An electric guitar held like a gun: body at the hand, neck out to the right. */
-const GUITAR = [
-  '.99.......',
-  '9991444445',
-  '099.......',
-];
-/** Just a neck, for covers whose guitar body is already painted on their shirt. */
-const NECK = [
-  '...445',
-  '.444..',
-  '04....',
-];
-
-/** What each cover holds. Keys follow GUN_ART; 8 is a bright highlight and 9 a body colour set per cover. */
-export const ENEMY_ARMS: Record<string, { art: GunArt; pal?: Palette }> = {
-  caroline: { art: { rows: [ // ballpark air horn: brass with a flared bell
-    '..1.1...8',
-    '066666688',
-    '........8',
-  ] } },
-  believin: { art: { rows: GUITAR }, pal: { '9': 0x1a1a22 } },
-  prayer: { art: { rows: GUITAR }, pal: { '9': 0x3a5a9a } },
-  freebird: { art: { rows: GUITAR }, pal: { '9': 0xc9843a } },
-  boss: { art: { rows: GUITAR }, pal: { '9': 0xd8344a } },
-  acoustic: { art: { rows: NECK } },
-  wonderwall: { art: { rows: NECK } },
-  shake: { art: { rows: [ // glitter cannon, throwing sparkles
-    '.9999.8.',
-    '0999966.',
-    '.9.9999.8',
-  ] }, pal: { '9': 0xff4fa3, '8': 0xffffff } },
-  karaoke: { art: { rows: [ // a mic held out like a pistol
-    '...33',
-    '01133',
-    '...33',
-  ] }, pal: { '3': 0xc8ccd8 } },
-  brightside: { art: { rows: [ // a pistol with a mirrorball on the end
-    '...87',
-    '12288',
-    '01...',
-  ] }, pal: { '8': 0xe8eef8 } },
-  hotel: { art: { rows: [ // the front desk bell
-    '..8..',
-    '.666.',
-    '06666',
-  ] } },
-  megamix: { art: { rows: [ // boombox
-    '.1111.',
-    '171171',
-    '011111',
-  ] } },
-  encore: { art: GUN_ART.precision }, // the ballad: a long, patient rifle
-  echo: { art: { rows: [ // tuning fork
-    '...888',
-    '0228..',
-    '...888',
-  ] } },
+/** The gun each cover carries, picked to fit its range and damage. */
+export const ENEMY_GUNS: Record<string, GunKind> = {
+  caroline: 'smg',
+  believin: 'assault',
+  shake: 'dualpistols',
+  karaoke: 'carbine',
+  acoustic: 'precision',
+  wonderwall: 'shotgun',
+  prayer: 'pistol',
+  brightside: 'pistol',
+  freebird: 'lmg',
+  hotel: 'assault',
+  megamix: 'sawedoff',
+  boss: 'lmg',
+  encore: 'precision',
+  echo: 'pistol',
 };
-
-/** Colours for a cover's weapon. */
-export function enemyArmPalette(id: string): Palette {
-  return { ...gunPalette(), '8': 0xffe88a, '9': 0xd8344a, ...(ENEMY_ARMS[id]?.pal ?? {}) };
-}
 
 /** Pads a body grid and stamps any gun-shaped art onto its hands. */
 export function armBodyWith(top: string[], art: GunArt, pad: number): string[] {

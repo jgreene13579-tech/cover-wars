@@ -3,7 +3,7 @@ import { CHARACTERS } from '../data/characters';
 import { ENEMIES } from '../data/enemies';
 import { NPCS } from '../data/npcs';
 import { makeCharacter, makeImage, normalize, SPR_W } from './pixel';
-import { armBody, armBodyWith, enemyArmPalette, ENEMY_ARMS, gunPalette } from './guns';
+import { armBody, ENEMY_GUNS, gunPalette } from './guns';
 
 /** Extra pixels on each side of a band member's frame, for the gun. */
 const GUN_PAD = 6;
@@ -61,11 +61,11 @@ export function buildTextures(scene: Phaser.Scene) {
     if (c.weapon.kind) makeCharacter(scene, c.id, armBody(top, c.weapon.kind, GUN_PAD), { ...c.palette, ...gunPalette(c.weapon.tint) }, GUN_PAD);
     else makeCharacter(scene, c.id, top, c.palette);
   }
-  // covers hold their own themed weapons the same way
+  // covers carry guns the same way
   for (const e of Object.values(ENEMIES)) {
-    const arm = ENEMY_ARMS[e.id];
+    const kind = ENEMY_GUNS[e.id];
     const top = normalize(e.art, SPR_W, 14);
-    if (arm) makeCharacter(scene, `enemy-${e.id}`, armBodyWith(top, arm.art, GUN_PAD), { ...e.palette, ...enemyArmPalette(e.id) }, GUN_PAD);
+    if (kind) makeCharacter(scene, `enemy-${e.id}`, armBody(top, kind, GUN_PAD), { ...e.palette, ...gunPalette() }, GUN_PAD);
     else makeCharacter(scene, `enemy-${e.id}`, top, e.palette);
   }
   for (const n of Object.values(NPCS)) makeCharacter(scene, `npc-${n.id}`, n.art, n.palette);
