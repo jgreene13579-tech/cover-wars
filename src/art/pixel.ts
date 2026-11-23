@@ -16,7 +16,7 @@ export function tone(n: number, f: number) {
 }
 
 /** Keys that are tiny details (eyes, mouths, lenses) and never get shaded. */
-const NO_SHADE = new Set(['e', 'm', 'L', 'O', 'v', 'w']);
+const NO_SHADE = new Set(['e', 'm', 'L', 'O', 'v', 'w', '7']);
 
 // Legs shared by every character; palette keys p (pants) and k (boots).
 export const LEGS = {
@@ -52,15 +52,18 @@ export function normalize(rows: string[], w: number, h: number): string[] {
   return out;
 }
 
-/** idle A, idle B (1px bob), walk A, walk B */
-export function charFrames(top: string[]): string[][] {
-  const t = normalize(top, SPR_W, 14);
-  const blank = '.'.repeat(SPR_W);
+/** idle A, idle B (1px bob), walk A, walk B. `pad` widens the frame on both sides (room for a gun). */
+export function charFrames(top: string[], pad = 0): string[][] {
+  const w = SPR_W + pad * 2;
+  const t = normalize(top, w, 14);
+  const side = '.'.repeat(pad);
+  const legs = (rows: string[]) => rows.map((r) => side + r + side);
+  const blank = '.'.repeat(w);
   return [
-    [...t, ...LEGS.stand],
-    [blank, ...t, ...LEGS.stand.slice(1)],
-    [...t, ...LEGS.walkA],
-    [...t, ...LEGS.walkB],
+    [...t, ...legs(LEGS.stand)],
+    [blank, ...t, ...legs(LEGS.stand.slice(1))],
+    [...t, ...legs(LEGS.walkA)],
+    [...t, ...legs(LEGS.walkB)],
   ];
 }
 
@@ -106,14 +109,15 @@ export function makeImage(scene: Phaser.Scene, key: string, rows: string[], pal:
 }
 
 /** Builds a 4-frame character sheet plus `${key}-idle` / `${key}-walk` animations. */
-export function makeCharacter(scene: Phaser.Scene, key: string, top: string[], pal: Palette) {
+export function makeCharacter(scene: Phaser.Scene, key: string, top: string[], pal: Palette, pad = 0) {
   if (scene.textures.exists(key)) return;
-  const frames = charFrames(top);
-  const t = scene.textures.createCanvas(key, SPR_W * frames.length, SPR_H)!;
+  const frames = charFrames(top, pad);
+  const fw = SPR_W + pad * 2;
+  const t = scene.textures.createCanvas(key, fw * frames.length, SPR_H)!;
   const ctx = t.getContext();
   frames.forEach((f, i) => {
-    paint(ctx, f, pal, i * SPR_W, 0, true, true);
-    t.add(`f${i}`, 0, i * SPR_W, 0, SPR_W, SPR_H);
+    paint(ctx, f, pal, i * fw, 0, true, true);
+    t.add(`f${i}`, 0, i * fw, 0, fw, SPR_H);
   });
   t.refresh();
   scene.anims.create({

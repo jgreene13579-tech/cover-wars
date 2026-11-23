@@ -87,8 +87,7 @@ export const CHARACTERS: CharacterDef[] = [
     // dog tags, khaki vest with pouches over tan camo fatigues, brown combat boots.
     palette: {
       H: 0xb89a68, c: 0x7a5a36, B: 0x3a2a18, Q: 0x6ab0c8, s: 0xc48a62, e: 0x1a1020, m: 0x6a2a2a,
-      J: 0x3a2a18, C: 0xc8b088, T: 0xd8dce4, V: 0x8a7a52, P: 0x6a5a3a,
-      g: 0x4a4e58, G: 0x23252b, p: 0xb8a078, k: 0x5a4028,
+      J: 0x3a2a18, C: 0xc8b088, T: 0xd8dce4, V: 0x8a7a52, P: 0x6a5a3a, p: 0xb8a078, k: 0x5a4028,
     },
     art: [
       '................',
@@ -101,9 +100,9 @@ export const CHARACTERS: CharacterDef[] = [
       '....JssmmsssJ...',
       '....CCCTCCCCC...',
       '...CVVVVVVVVVC..',
-      '...cVPVVVVVPVggg',
-      '...sVPVVVVVPsGGG',
-      '...CVVVVVVVVCG..',
+      '...cVPVVVVVPV...',
+      '...sVPVVVVVPs...',
+      '...CVVVVVVVVC...',
       '....CcCCcCCcC...',
     ],
   },
@@ -125,8 +124,7 @@ export const CHARACTERS: CharacterDef[] = [
     killLines: ['CAME HERE TO DO WHAT I DO THE BEST.'],
     palette: {
       H: 0x1b1622, h: 0x4a3e5c, s: 0xd9a27a, e: 0x1a1020, m: 0x8a3b3b,
-      S: 0x2e2b3a, d: 0xd8d8e8, w: 0xf2f2f2, r: 0xd8344a,
-      g: 0xb8bcc8, G: 0x5a5f70, p: 0x2e2b3a, k: 0x0f0d14,
+      S: 0x2e2b3a, d: 0xd8d8e8, w: 0xf2f2f2, r: 0xd8344a, p: 0x2e2b3a, k: 0x0f0d14,
     },
     art: [
       '................',
@@ -139,8 +137,8 @@ export const CHARACTERS: CharacterDef[] = [
       '....SSSwrwSSS...',
       '...SdSSwrwSSdS..',
       '...SSdSwrwSdSS..',
-      '..gsSSdSwSSdSsgg',
-      '..GGSdSSSSSdSGG.',
+      '...sSSdSwSSdSs..',
+      '....SdSSSSSdS...',
       '....SSdSSSdSS...',
       '....SSSSSSSSS...',
     ],
@@ -162,7 +160,7 @@ export const CHARACTERS: CharacterDef[] = [
     listen: 'https://open.spotify.com/album/037NQyJRcHNCdKs6jjImnf',
     palette: {
       R: 0xc8202e, r: 0x8a1420, h: 0x8a3a1f, s: 0xf3c9a6, e: 0x1a1020, m: 0xa04a4a,
-      O: 0xff9a2e, C: 0x6b4a32, c: 0x4a3222, g: 0x7a7f8f, G: 0x3d404c, p: 0x4a3222, k: 0x1e1612,
+      O: 0xff9a2e, C: 0x6b4a32, c: 0x4a3222, p: 0x4a3222, k: 0x1e1612,
     },
     art: [
       '.......r........',
@@ -174,8 +172,8 @@ export const CHARACTERS: CharacterDef[] = [
       '.....hssmsss....',
       '....OOOOOOOOO...',
       '...CCOOOCCCCC...',
-      '...CCCOOCCCsgggg',
-      '...CCCCOCCCCG.G.',
+      '...CCCOOCCCs....',
+      '...CCCCOCCCC....',
       '...CCCCCCCCC....',
       '...CcCCCCCcC....',
       '...CCCCCCCCC....',
@@ -200,7 +198,7 @@ export const CHARACTERS: CharacterDef[] = [
     killLines: ['YOUR LIFE GOES DOWN THE DRAIN.'],
     palette: {
       K: 0x141018, s: 0xf4e6ee, e: 0x5a1050, D: 0x24202c, d: 0x3e3850,
-      P: 0xd8344a, Y: 0xe8d34f, g: 0x8a8f9f, G: 0x3d404c, p: 0x1a1820, k: 0x0c0a10,
+      P: 0xd8344a, Y: 0xe8d34f, p: 0x1a1820, k: 0x0c0a10,
     },
     art: [
       '................',
@@ -212,9 +210,9 @@ export const CHARACTERS: CharacterDef[] = [
       '....KK.Kssss....',
       '....DDDDDDDDD...',
       '...DDdDDDDDdDD..',
-      '...DDdDDDDDdDggg',
-      '...DPDDDDDDdsGGG',
-      '...DDDDDYDDdDG..',
+      '...DDdDDDDDdD...',
+      '...DPDDDDDDds...',
+      '...DDDDDYDDdD...',
       '....DDDDDDDDD...',
       '....DdDDDDDdD...',
     ],
@@ -239,7 +237,7 @@ export const CHARACTERS: CharacterDef[] = [
     specialLines: ['THAT IS BEAUTIFUL TO ME.'],
     palette: {
       Y: 0xffc83a, y: 0xc98a1a, s: 0xc98a64, e: 0x1a1020, m: 0x7a3a2a, b: 0x4a2e1c,
-      V: 0xff7a2a, v: 0xe8e8e8, T: 0x3a3f4a, g: 0x8a6a4a, G: 0x3d404c, p: 0x3a4a6a, k: 0x3a2416,
+      V: 0xff7a2a, v: 0xe8e8e8, T: 0x3a3f4a, p: 0x3a4a6a, k: 0x3a2416,
     },
     art: [
       '................',
@@ -252,8 +250,8 @@ export const CHARACTERS: CharacterDef[] = [
       '....bbbmmmbb....',
       '..VVVVVVVVVVVV..',
       '..VvVVTTTTVVvV..',
-      '..VvVVTTTTVVvGGG',
-      '..sVVVTTTTVVsggg',
+      '..VvVVTTTTVVv...',
+      '..sVVVTTTTVVs...',
       '..VvVVTTTTVVvV..',
       '...VVVVVVVVVV...',
     ],
@@ -276,7 +274,7 @@ export const CHARACTERS: CharacterDef[] = [
     listen: 'https://open.spotify.com/track/1fM9E1tqlZeoG0FJsQt4of',
     palette: {
       H: 0x6a3a1a, s: 0xe8b890, V: 0x2a2a3a, c: 0x4fe3ff, m: 0x9a4a4a,
-      J: 0x3f6b3a, j: 0x2a4a28, g: 0x9aa3b5, G: 0x4a5060, p: 0x3a3a2a, k: 0x1a1612,
+      J: 0x3f6b3a, j: 0x2a4a28, p: 0x3a3a2a, k: 0x1a1612,
     },
     art: [
       '................',
@@ -289,8 +287,8 @@ export const CHARACTERS: CharacterDef[] = [
       '.....sssmss.....',
       '....JJJJJJJJJ...',
       '...JJjJJJJJjJ...',
-      '...JJjJJJJJjgggg',
-      '...sJjJJJJJjsG..',
+      '...JJjJJJJJj....',
+      '...sJjJJJJJjs...',
       '...JJjJJJJJjJ...',
       '....JJJJJJJJJ...',
     ],
@@ -312,8 +310,7 @@ export const CHARACTERS: CharacterDef[] = [
     listen: 'https://open.spotify.com/track/03XSfqsjmuHxxN6jgXdtqE',
     palette: {
       F: 0xa8381e, f: 0xd8602a, s: 0xe8b08a, e: 0x1a1020, m: 0xa04a4a,
-      R: 0xd8344a, r: 0x8a1a2a, w: 0xf2f2f2, t: 0x1a1020, Y: 0xffd34f,
-      g: 0xc8ccd8, G: 0xff9a2e, p: 0x2e2b3a, k: 0x0f0d14,
+      R: 0xd8344a, r: 0x8a1a2a, w: 0xf2f2f2, t: 0x1a1020, Y: 0xffd34f, p: 0x2e2b3a, k: 0x0f0d14,
     },
     art: [
       '................',
@@ -326,8 +323,8 @@ export const CHARACTERS: CharacterDef[] = [
       '....RRRwtwRRR...',
       '...RRrRwtwRrRR..',
       '...RRrRRtRRrRR..',
-      '...RRrRRRRRrRggg',
-      '...sRYRRRRRrsGG.',
+      '...RRrRRRRRrR...',
+      '...sRYRRRRRrs...',
       '...RRrRRRRRrR...',
       '....RRRRRRRRR...',
     ],
@@ -349,7 +346,7 @@ export const CHARACTERS: CharacterDef[] = [
     listen: 'https://open.spotify.com/album/28gjbH2mmcgsTyNLAm7ar2',
     palette: {
       Z: 0xe8d27a, z: 0xfff4c0, s: 0xd9a27a, C: 0x4fe3ff, m: 0x7a2a4a,
-      U: 0x5a2a9a, c: 0xb8bcc8, p: 0x2a1a4a, k: 0x0f0d14,
+      U: 0x5a2a9a, p: 0x2a1a4a, k: 0x0f0d14,
     },
     art: [
       '................',
@@ -362,8 +359,8 @@ export const CHARACTERS: CharacterDef[] = [
       '.....ssmmss.....',
       '....UUUUUUUUU...',
       '...UUZUUUUUUU...',
-      '...UUUZZUUUUcccc',
-      '...sUUUZUUUUsCC.',
+      '...UUUZZUUUU....',
+      '...sUUUZUUUUs...',
       '...UUUZUUUUUU...',
       '....UUUUUUUUU...',
     ],
@@ -389,8 +386,7 @@ export const CHARACTERS: CharacterDef[] = [
     // collar, binoculars on a strap across the chest, dark pants, brown boots.
     palette: {
       B: 0x3a3a42, b: 0x24242a, h: 0x5a3a24, s: 0xd9a27a, e: 0x1a1020, t: 0x8a6448, m: 0x7a3a3a,
-      J: 0x2f4a2a, j: 0x456a3c, K: 0x15151a, O: 0x1e1e24, o: 0x7aa8c8,
-      g: 0x4a4e58, G: 0x23252b, p: 0x2a2a30, k: 0x4a3220,
+      J: 0x2f4a2a, j: 0x456a3c, K: 0x15151a, O: 0x1e1e24, o: 0x7aa8c8, p: 0x2a2a30, k: 0x4a3220,
     },
     art: [
       '................',
@@ -403,9 +399,9 @@ export const CHARACTERS: CharacterDef[] = [
       '.....ttsmstt....',
       '...JjjjjjjjjJ...',
       '...JJJKJJJKJJ...',
-      '...JJJOOOOJJJggg',
-      '...sJJOoOoJJsGGG',
-      '...JJJJJJJJJJG..',
+      '...JJJOOOOJJJ...',
+      '...sJJOoOoJJs...',
+      '...JJJJJJJJJJ...',
       '....JJJJJJJJJ...',
     ],
   },
@@ -427,7 +423,7 @@ export const CHARACTERS: CharacterDef[] = [
     mindControlImmune: true, // blindfolded: Hotel California can't check him in
     palette: {
       L: 0xd8d8e8, s: 0xe8c0a0, B: 0x1a1020, P: 0xff4fa3, m: 0x9a4a5a,
-      T: 0x1f8a8a, t: 0x0f5a5a, g: 0xffd34f, G: 0xc9a44a, p: 0x0f4a4a, k: 0x1a1020,
+      T: 0x1f8a8a, t: 0x0f5a5a, p: 0x0f4a4a, k: 0x1a1020,
     },
     art: [
       '................',
@@ -440,8 +436,8 @@ export const CHARACTERS: CharacterDef[] = [
       '....L.ssmss.....',
       '....TTTTTTTTT...',
       '...TTtTTTTTtT...',
-      '...TTtTTTTTtTggg',
-      '...sTtTTTTTtsGG.',
+      '...TTtTTTTTtT...',
+      '...sTtTTTTTts...',
       '...TTtTTTTTtT...',
       '....TTTTTTTTT...',
     ],
@@ -464,7 +460,7 @@ export const CHARACTERS: CharacterDef[] = [
     dashLines: ['BETTER WATCH MY SPEED.'],
     palette: {
       s: 0xe0a47a, S: 0xfff0e0, e: 0x1a1020, m: 0x8a3a3a, b: 0x5a3418,
-      F: 0x3a6ab0, f: 0x1e3a6a, g: 0x6a4a2a, G: 0x3d404c, p: 0x2c3e6b, k: 0xbfefff,
+      F: 0x3a6ab0, f: 0x1e3a6a, p: 0x2c3e6b, k: 0xbfefff,
     },
     art: [
       '................',
@@ -477,8 +473,8 @@ export const CHARACTERS: CharacterDef[] = [
       '....bbbmmbbb....',
       '..FFbbbbbbbbFF..',
       '.FFfFFbbbbFFfFF.',
-      '.FFfFFFFFFFfFGGG',
-      '.sFfFFFFFFFfsggg',
+      '.FFfFFFFFFFfF...',
+      '.sFfFFFFFFFfs...',
       '.FFfFFFFFFFfFF..',
       '..FFFFFFFFFFFF..',
     ],
@@ -502,8 +498,7 @@ export const CHARACTERS: CharacterDef[] = [
     // with gold epaulettes, red medals and gold buttons, gold sidearm.
     palette: {
       C: 0x1e2a4a, Y: 0xffd34f, c: 0x111118, h: 0x2a1a10, s: 0xd9a27a, e: 0x1a1020,
-      M: 0x3a2416, x: 0x8a5a34, o: 0xff7a2a, U: 0x2a3a5a, R: 0xd8344a,
-      g: 0xc9a44a, G: 0x8a6a2a, p: 0x1e2a4a, k: 0x111118,
+      M: 0x3a2416, x: 0x8a5a34, o: 0xff7a2a, U: 0x2a3a5a, R: 0xd8344a, p: 0x1e2a4a, k: 0x111118,
     },
     art: [
       '................',
@@ -516,9 +511,9 @@ export const CHARACTERS: CharacterDef[] = [
       '.....sMMMMxxxo..',
       '..YUUUUUUUUUY...',
       '...UURRUYUUUU...',
-      '...UUUUUYUUUUggg',
-      '...sUUUUYUUUsGGG',
-      '...UUUUUYUUUUG..',
+      '...UUUUUYUUUU...',
+      '...sUUUUYUUUs...',
+      '...UUUUUYUUUU...',
       '....UUUUUUUUU...',
     ],
   },
@@ -542,8 +537,7 @@ export const CHARACTERS: CharacterDef[] = [
     // coyote-tan plate carrier with pouches and an orange patch, black gloves, dark tac pants.
     palette: {
       M: 0x6a3a1a, s: 0xe0a47a, e: 0x1a1020, H: 0x111118, b: 0x5a3418, m: 0x8a3a3a,
-      A: 0x3a3d45, T: 0xb09a6a, P: 0x8a7650, a: 0x2a2d34, L: 0x111114, R: 0xff7a2a,
-      g: 0x5a5f6a, G: 0x2a2d34, p: 0x45453d, k: 0x1a1a1a,
+      A: 0x3a3d45, T: 0xb09a6a, P: 0x8a7650, a: 0x2a2d34, L: 0x111114, R: 0xff7a2a, p: 0x45453d, k: 0x1a1a1a,
     },
     art: [
       '................',
@@ -556,9 +550,9 @@ export const CHARACTERS: CharacterDef[] = [
       '..AAATTTTTTAAA..',
       '..AATTPTTPTTAA..',
       '..AATTPTTPTTAA..',
-      '..aTTTTTTTTTTggg',
-      '..LTTRTTTTTTLGGG',
-      '...TTTTTTTTTTG..',
+      '..aTTTTTTTTTT...',
+      '..LTTRTTTTTTL...',
+      '...TTTTTTTTTT...',
       '...aaaaaaaaaa...',
     ],
   },
@@ -583,8 +577,7 @@ export const CHARACTERS: CharacterDef[] = [
     // neon green tracksuit with white stripes, white sneakers.
     palette: {
       F: 0x2a5ab0, f: 0x1a3a78, H: 0x3a2416, s: 0xe0a47a, O: 0x111118, w: 0xe8e8e0,
-      m: 0xf0f0f0, N: 0x2f7d52, n: 0x1f5038,
-      g: 0x5a5f6a, G: 0x2a2d34, p: 0x2f7d52, k: 0xe0e0d8,
+      m: 0xf0f0f0, N: 0x2f7d52, n: 0x1f5038, p: 0x2f7d52, k: 0xe0e0d8,
     },
     art: [
       '.F..............',
@@ -597,9 +590,9 @@ export const CHARACTERS: CharacterDef[] = [
       '.NN...ssssss....',
       '.NN.NNwNNwNNN...',
       '.NNNNNwNNwNNNN..',
-      '...NNNwNNwNNNggg',
-      '...NNNwNNwNNsGGG',
-      '...NNNwNNwNNNG..',
+      '...NNNwNNwNNN...',
+      '...NNNwNNwNNs...',
+      '...NNNwNNwNNN...',
       '...nnnnnnnnnn...',
     ],
   },
@@ -623,8 +616,7 @@ export const CHARACTERS: CharacterDef[] = [
     // dark face gaiter, plate carrier with pouches and a blue pen in the chest pocket.
     palette: {
       H: 0x3a4030, V: 0x1a1a1a, L: 0x6dff7a, s: 0xe0a47a, B: 0x2a2a2a,
-      U: 0x4a5a3a, C: 0x5a6a45, P: 0x3a4a2a, n: 0x2a6aff, u: 0x34402a,
-      g: 0x3a3d45, G: 0x1a1a1a, p: 0x4a5a3a, k: 0x1a1a1a,
+      U: 0x4a5a3a, C: 0x5a6a45, P: 0x3a4a2a, n: 0x2a6aff, u: 0x34402a, p: 0x4a5a3a, k: 0x1a1a1a,
     },
     art: [
       '................',
@@ -637,9 +629,9 @@ export const CHARACTERS: CharacterDef[] = [
       '....BBBBBBBB....',
       '..UUCCCCCCCCUU..',
       '..UUCPPnCPPCUU..',
-      '..UUCCCCCCCCUggg',
-      '..sUCPPCCPPCsGGG',
-      '...UCCCCCCCCUG..',
+      '..UUCCCCCCCCU...',
+      '..sUCPPCCPPCs...',
+      '...UCCCCCCCCU...',
       '...uuuuuuuuuu...',
     ],
   },
@@ -663,7 +655,7 @@ export const CHARACTERS: CharacterDef[] = [
     // bulky quilted olive-tan suit with an orange patch, dark gloves.
     palette: {
       H: 0x5a6a45, V: 0x1a2a3a, v: 0x6ab0ff, F: 0x8a8a5a, f: 0x5a5a3a, R: 0xff7a2a,
-      s: 0x3a3a30, g: 0x5a5f6a, G: 0x2a2d34, p: 0x6a6a45, k: 0x2a2a20,
+      s: 0x3a3a30, p: 0x6a6a45, k: 0x2a2a20,
     },
     art: [
       '................',
@@ -676,9 +668,9 @@ export const CHARACTERS: CharacterDef[] = [
       '.FFFFFFFFFFFFFF.',
       '.FFfFFFFFFFfFFF.',
       '.FFfFFRRFFFfFFF.',
-      '.FFfFFFFFFFfFggg',
-      '.sFfFFFFFFFfsGGG',
-      '..FFFFFFFFFFFG..',
+      '.FFfFFFFFFFfF...',
+      '.sFfFFFFFFFfs...',
+      '..FFFFFFFFFFF...',
       '..ffffffffffff..',
     ],
   },
@@ -704,8 +696,7 @@ export const CHARACTERS: CharacterDef[] = [
     // jacket over a dark tee, grapple launcher strapped to his left wrist.
     palette: {
       D: 0xd8344a, h: 0x8a8a8a, s: 0xd9a27a, e: 0x1a1020, x: 0xa04a3a, b: 0x7a7a7a, m: 0x6a2a2a,
-      J: 0x5a3420, j: 0x2a1810, T: 0x3a3a3a, Q: 0x9aa2ac,
-      g: 0x6a4a2a, G: 0x3d404c, p: 0x2c3e6b, k: 0x2a1810,
+      J: 0x5a3420, j: 0x2a1810, T: 0x3a3a3a, Q: 0x9aa2ac, p: 0x2c3e6b, k: 0x2a1810,
     },
     art: [
       '................',
@@ -718,9 +709,9 @@ export const CHARACTERS: CharacterDef[] = [
       '.....bbmmbb.....',
       '..JJJJTTTTJJJJ..',
       '..JjJJTTTTJJjJ..',
-      '..JjJJTTTTJJjggg',
-      '.QQjJJTTTTJJsGGG',
-      '..JjJJTTTTJJJG..',
+      '..JjJJTTTTJJj...',
+      '.QQjJJTTTTJJs...',
+      '..JjJJTTTTJJJ...',
       '..JJJJJJJJJJJJ..',
     ],
   },

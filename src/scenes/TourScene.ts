@@ -8,7 +8,7 @@ import { Music } from '../audio/Music';
 import { sfx } from '../audio/Synth';
 import { backdrop } from './backdrop';
 
-/** Tour dates: the venues the band played growing up. Each win unlocks the next show. */
+/** Tour dates: the venues the band has played. Each win unlocks the next show. */
 export class TourScene extends Phaser.Scene {
   private pick = 0;
   private detail: Phaser.GameObjects.GameObject[] = [];
@@ -25,7 +25,7 @@ export class TourScene extends Phaser.Scene {
     this.rows = [];
 
     txt(this, GAME_W / 2, 10, 'TOUR DATES', 16, css(COLORS.pink)).setOrigin(0.5, 0);
-    txt(this, GAME_W / 2, 31, isHardcore() ? 'HARDCORE RUN: FALLEN SONGS ARE GONE FOR GOOD' : 'EVERY VENUE WE PLAYED GROWING UP', 8, isHardcore() ? css(COLORS.red) : css(COLORS.gray)).setOrigin(0.5, 0);
+    if (isHardcore()) txt(this, GAME_W / 2, 31, 'HARDCORE RUN: FALLEN SONGS ARE GONE FOR GOOD', 8, css(COLORS.red)).setOrigin(0.5, 0);
 
     // two columns of five shows
     MISSIONS.forEach((m, i) => {

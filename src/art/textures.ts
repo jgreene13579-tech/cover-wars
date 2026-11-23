@@ -2,7 +2,11 @@
 import { CHARACTERS } from '../data/characters';
 import { ENEMIES } from '../data/enemies';
 import { NPCS } from '../data/npcs';
-import { makeCharacter, makeImage } from './pixel';
+import { makeCharacter, makeImage, normalize, SPR_W } from './pixel';
+import { armBody, gunPalette } from './guns';
+
+/** Extra pixels on each side of a band member's frame, for the gun. */
+const GUN_PAD = 6;
 
 // Venue tiles live in venues.ts; this file builds characters and small icons.
 
@@ -51,7 +55,12 @@ const ICONS: Record<string, { rows: string[]; pal: Record<string, number> }> = {
 };
 
 export function buildTextures(scene: Phaser.Scene) {
-  for (const c of CHARACTERS) makeCharacter(scene, c.id, c.art, c.palette);
+  // band members are drawn holding their actual gun, so their frames are wider to fit it
+  for (const c of CHARACTERS) {
+    const top = normalize(c.art, SPR_W, 14);
+    if (c.weapon.kind) makeCharacter(scene, c.id, armBody(top, c.weapon.kind, GUN_PAD), { ...c.palette, ...gunPalette(c.weapon.tint) }, GUN_PAD);
+    else makeCharacter(scene, c.id, top, c.palette);
+  }
   for (const e of Object.values(ENEMIES)) makeCharacter(scene, `enemy-${e.id}`, e.art, e.palette);
   for (const n of Object.values(NPCS)) makeCharacter(scene, `npc-${n.id}`, n.art, n.palette);
 
