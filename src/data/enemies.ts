@@ -24,6 +24,8 @@ export interface EnemyDef {
    * After a hold ends he waits `cooldown` turns before trying again.
    */
   mindControl?: { range: number; cooldown: number };
+  /** Medic: instead of attacking, patches up the most hurt cover within `range` for `amount` HP, then rests `cooldown` turns. */
+  heal?: { range: number; amount: number; cooldown: number };
   taunts: string[];
   palette: Palette;
   art: string[];
@@ -238,6 +240,42 @@ export const ENEMIES: Record<string, EnemyDef> = {
       '...sPOOOOOOPs...',
       '....PPPPPPPP....',
       '....PQPPPPQP....',
+    ],
+  },
+  prayer: {
+    id: 'prayer',
+    name: "LIVIN' ON A PRAYER",
+    tier: 'elite',
+    hp: 5, aim: 60, move: 5,
+    weapon: { name: 'POWER CHORD', dmg: [2, 3], range: 9, shots: 1, crit: 5, sfx: 'note' },
+    heal: { range: 4, amount: 3, cooldown: 1 },
+    taunts: [
+      'HOLD ON. I GOT YOU.',
+      "WE'RE NOT DONE YET. NOT EVEN CLOSE.",
+      'BANDAGES, BIG HAIR AND BELIEF.',
+      'NOBODY GETS BOOED OFF ON MY WATCH.',
+      'EVERY BAR IN AMERICA KNOWS MY NAME.',
+    ],
+    // 80s arena-rock medic: huge teased blond hair, denim jacket, white tee, red cross armband
+    palette: {
+      H: 0xe8c070, h: 0xb8904a, s: 0xf1c29a, e: 0x1a1020, m: 0x8a3a3a,
+      J: 0x3a5a9a, W: 0xf0f0f0, X: 0xd8344a, g: 0x5a5f6a, G: 0x2a2d34, p: 0x2a3a6a, k: 0xe8e8e8,
+    },
+    art: [
+      '....HHHHHHH.....',
+      '...HHHHHHHHH....',
+      '..HHHhHHHhHHH...',
+      '..HHHHHHHHHHH...',
+      '..HHsssssssHH...',
+      '..HHsessessHH...',
+      '..HHsssssssHH...',
+      '...HHsssmssHH...',
+      '....JJWWWWJJ....',
+      '...XJJWWWWJJJ...',
+      '...XJJWWWWJJJggg',
+      '...sJJWWWWJJsGGG',
+      '...JJJWWWWJJJG..',
+      '....JJJJJJJJ....',
     ],
   },
   brightside: {

@@ -45,7 +45,8 @@ export class Unit {
   tpCd = 0; // Free Bird: turns until he can teleport again
   controlling: Unit | null = null; // Hotel California: who he has checked in
   controlledBy: Unit | null = null; // band member: who has them checked in
-  mcCd = 0; // Hotel California: turns until he can check someone in again
+  mcCd = 0;
+  healCd = 0; // Livin' on a Prayer: turns until the next patch-up // Hotel California: turns until he can check someone in again
   sprite: Phaser.GameObjects.Sprite;
   bar: Phaser.GameObjects.Graphics;
   private stealthTween?: Phaser.Tweens.Tween;

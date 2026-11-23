@@ -1060,6 +1060,23 @@ export class MissionScene extends Phaser.Scene {
     return bonus;
   }
 
+  /** Livin' on a Prayer heals a cover song: a green line, a burst, and the HP back. */
+  async prayerHeal(e: Unit, t: Unit, amount: number) {
+    e.face(t.x);
+    if (Math.random() < 0.6) { this.lastBark = 0; this.bark(e, Phaser.Utils.Array.GetRandom(ENEMIES[e.id].taunts)); }
+    const line = this.add.graphics().setDepth(14999);
+    this.world.add(line);
+    line.lineStyle(1, 0x6dff7a, 0.9).lineBetween(e.chest().x, e.chest().y, t.chest().x, t.chest().y);
+    this.tweens.add({ targets: line, alpha: 0, duration: 500, delay: 250, onComplete: () => line.destroy() });
+    sfx.rally();
+    const gained = Math.min(amount, t.maxHp - t.hp);
+    t.hp += gained;
+    t.drawBar();
+    this.burst(t.chest().x, t.chest().y, [0x6dff7a, 0xffffff, 0xd8344a], 12, 12, 500);
+    this.popup(t.chest(), `+${gained} HP`, css(COLORS.green));
+    await this.wait(650);
+  }
+
   /** Free Bird vanishes in a burst of feathers and reappears somewhere worse for you. */
   async freeBirdBlink(e: Unit, to: Pos) {
     const def = ENEMIES[e.id];
@@ -1802,6 +1819,21 @@ export class MissionScene extends Phaser.Scene {
         if (guest) {
           await this.checkIn(e, guest);
           await this.puppetAct(guest);
+          return;
+        }
+      }
+    }
+    // Livin' on a Prayer: patch up the most hurt cover nearby instead of attacking
+    const hl = ENEMIES[e.id]?.heal;
+    if (hl) {
+      if (e.healCd > 0) e.healCd--;
+      else {
+        const patient = this.enemies()
+          .filter((o) => o.hp < o.maxHp && dist(o, e) <= hl.range)
+          .sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp)[0];
+        if (patient) {
+          await this.prayerHeal(e, patient, hl.amount);
+          e.healCd = hl.cooldown;
           return;
         }
       }

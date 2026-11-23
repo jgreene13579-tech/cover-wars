@@ -10,6 +10,7 @@
 //  P band spawn
 //  Enemies: E Sweet Caroline  D Don't Stop Believin'  Y Shake It Off  (basic)
 //           K Karaoke Power Ballad  U Coffeehouse Acoustic  V Wonderwall  r Mr. Brightside  (elite)
+//           l Livin' on a Prayer (elite medic)
 //           M DJ Megamix (tank)   * Free Bird (legendary: teleports)   @ Hotel California (legendary: mind control)
 //           X Stadium Clap-Along (boss)  Z The Encore Anthem (final boss)
 
@@ -148,7 +149,7 @@ export const MISSIONS: MissionDef[] = [
       '#.LLLL......Dr.LLLL#',
       '#P.....o----o......#',
       '#......|mmmm|..M.D.#',
-      '#P.....mmmMmm....E.#',
+      '#P.....mmmMmm....l.#',
       '#..k...|mmmm|..K...#',
       '#P.....o----o....Y.#',
       '#...........Y..r..E#',
@@ -168,7 +169,7 @@ export const MISSIONS: MissionDef[] = [
       '#.......h....@..K..#',
       '#P..h......,,,..D..#',
       '#.......A...r.h..*.#',
-      '#P...h.....h..E.U..#',
+      '#P...h.....h..l.U..#',
     ],
   },
   {
@@ -181,7 +182,7 @@ export const MISSIONS: MissionDef[] = [
       '#P.S.S.S.S...Y..sUs#',
       '#...........T...r.D#',
       '#P..,,,,,......C..M#',
-      '#...,T,,,..T.....E.#',
+      '#...,T,,,..T.....l.#',
       '#P..,,,,,....D..@V.#',
       '#.........C.Y..U...#',
       '#P..CC.....T....*..#',
@@ -196,7 +197,7 @@ export const MISSIONS: MissionDef[] = [
       '#RRR.........T.E.RR#',
       '#P.......BBBB...sXs#',
       '#..T.....B..B....U.#',
-      '#P.......BBBB..E.r.#',
+      '#P.......BBBB..l.r.#',
       '#....T.....D...M..@#',
       '#P..,,,,..T..K....*#',
       '#...,CC,......YK...#',
@@ -213,7 +214,7 @@ export const MISSIONS: MissionDef[] = [
       '.P..,I,,,I,.....ssZs',
       '....,,,,,,,.En..ssss',
       '.P..,I,,,I,..U.D...n',
-      '....,,,,,,,..E..F..r',
+      '....,,,,,,,..l..F..r',
       '.P......b...K.M..*..',
       '..n...O......V...@..',
       '.P.......n.r....O.YU',
@@ -232,7 +233,7 @@ export const TILE_CHARS: Record<string, TileType> = {
 
 export const ENEMY_CHARS: Record<string, string> = {
   E: 'caroline', D: 'believin', Y: 'shake',
-  K: 'karaoke', U: 'acoustic', V: 'wonderwall', r: 'brightside', M: 'megamix',
+  K: 'karaoke', U: 'acoustic', V: 'wonderwall', r: 'brightside', M: 'megamix', l: 'prayer',
   '*': 'freebird', '@': 'hotel', X: 'boss', Z: 'encore',
 };
 
