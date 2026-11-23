@@ -30,7 +30,7 @@ async function until(fn: () => boolean, timeout = 180000) {
 const SPEED = 25;
 const BUY_ORDER = ['toast', 'mindfully-blind', 'never-heard', 'wreck', 'vision', 'pen-and-paper', 'glass-slipper',
   'indy-blvd', 'fire-sale', 'no-running', 'crown', 'electric-ones', 'been-here-before', 'distraction'];
-const UPGRADE_ORDER = ['kevlar', 'squad5', 'merch', 'dmg-auto', 'cd', 'dmg-close', 'squad6', 'secondwind', 'dmg-spec', 'ap'];
+const UPGRADE_ORDER = ['squad5', 'kevlar', 'merch', 'dmg-auto', 'cd', 'dmg-close', 'squad6', 'secondwind', 'dmg-spec', 'ap'];
 
 function shotValue(m: Scene, u: Unit, from: Pos, e: Unit) {
   if (!canTarget(m.grid, u, from, e)) return 0;
@@ -153,7 +153,7 @@ function spend(save: SaveData) {
       // squad-size upgrades only when there is also money for the song to fill the slot
       const reserve = id.startsWith('squad') ? 300 : 0;
       if (u.prices[lvl] + reserve <= save.coins) { save.coins -= u.prices[lvl]; save.upgrades[id] = lvl + 1; bought = true; }
-      break; // buy upgrades in order
+      // too pricey right now: try the next one on the list
     }
   }
 }
