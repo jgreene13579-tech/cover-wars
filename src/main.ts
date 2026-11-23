@@ -57,6 +57,11 @@ async function start() {
 
   if (import.meta.env.DEV) (window as unknown as { __game: Phaser.Game }).__game = game;
 
+  // installable web app: cache the game so it plays offline (skipped where workers aren't allowed)
+  if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
   window.addEventListener('keydown', (e) => {
     if (e.key === 'm' || e.key === 'M') Music.toggleMute(game);
   });
