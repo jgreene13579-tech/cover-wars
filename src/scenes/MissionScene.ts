@@ -1060,6 +1060,54 @@ export class MissionScene extends Phaser.Scene {
     return bonus;
   }
 
+  /** Bohemian Rhapsody changes acts as it takes damage: ballad, then opera (echoes), then rock (acts twice). */
+  rhapsodyAct(u: Unit) {
+    const next = u.hp <= u.maxHp / 3 ? 3 : u.hp <= (u.maxHp * 2) / 3 ? 2 : 1;
+    while (u.act < next) {
+      u.act++;
+      this.cameras.main.flash(250, 168, 111, 216);
+      sfx.rally();
+      if (u.act === 2) {
+        u.weapon = { name: 'THE OPERA', dmg: [3, 4], range: 11, shots: 1, crit: 10, sfx: 'note', tint: 0xa86fd8 };
+        u.barTint = 0xa86fd8;
+        this.popup({ x: u.sprite.x, y: u.sprite.y - 30 }, 'ACT II: THE OPERA!', css(0xa86fd8));
+        this.spawnEchoes(u, 2);
+      } else {
+        u.weapon = { name: 'THE ROCK OUT', dmg: [3, 5], range: 10, shots: 1, crit: 15, sfx: 'rifle', tint: 0xff4f4f };
+        u.barTint = 0xff4f4f;
+        u.sprite.setTint(0xffb0b0);
+        this.popup({ x: u.sprite.x, y: u.sprite.y - 30 }, 'ACT III: ROCK OUT! (2 ACTIONS)', css(0xff4f4f));
+      }
+      u.drawBar();
+    }
+  }
+
+  /** The opera act: copies of the boss appear on open tiles around it. */
+  spawnEchoes(boss: Unit, n: number) {
+    const d = ENEMIES.echo;
+    const vet = enemyVeterancy(this.missionIndex);
+    const spots: Pos[] = [];
+    for (let r = 1; r <= 3 && spots.length < n; r++)
+      for (let dy = -r; dy <= r && spots.length < n; dy++)
+        for (let dx = -r; dx <= r && spots.length < n; dx++) {
+          const p = { x: boss.x + dx, y: boss.y + dy };
+          if (Math.max(Math.abs(dx), Math.abs(dy)) !== r || !this.grid.walkable(p.x, p.y) || this.unitAt(p.x, p.y)) continue;
+          spots.push(p);
+        }
+    for (const p of spots) {
+      const echo = new Unit(this, this.world, {
+        id: d.id, team: 'enemy', name: d.name, archetype: 'ECHO',
+        hp: d.hp + vet.hp, aim: d.aim + vet.aim, move: d.move, weapon: d.weapon, tex: `enemy-${d.id}`, x: p.x, y: p.y,
+      });
+      echo.active = true;
+      echo.sprite.setAlpha(0);
+      this.tweens.add({ targets: echo.sprite, alpha: 0.85, duration: 400 });
+      this.burst(echo.chest().x, echo.chest().y, [0xa86fd8, 0xffffff, 0xff8ac8], 14, 14, 500);
+      this.units.push(echo);
+    }
+    if (spots.length) this.time.delayedCall(500, () => { this.lastBark = 0; this.bark(boss, 'ENTER THE CHOIR!'); });
+  }
+
   /** Livin' on a Prayer heals a cover song: a green line, a burst, and the HP back. */
   async prayerHeal(e: Unit, t: Unit, amount: number) {
     e.face(t.x);
@@ -1275,6 +1323,7 @@ export class MissionScene extends Phaser.Scene {
     if (crit) { sfx.crit(); this.popup(u.chest(), `CRIT -${n}`, css(COLORS.gold)); this.cameras.main.shake(120, 0.004); }
     else { sfx.hit(); this.popup(u.chest(), `-${n}`, css(COLORS.red)); }
     if (u.hp <= 0) this.kill(u);
+    else if (u.id === 'encore') this.rhapsodyAct(u);
   }
 
   kill(u: Unit) {
@@ -1718,7 +1767,7 @@ export class MissionScene extends Phaser.Scene {
 
   async clapWave(boss: Unit, c: Pos) {
     boss.face(c.x);
-    this.popup(boss.chest(), 'CLAP ALONG!', css(COLORS.gold));
+    this.popup(boss.chest(), boss.id === 'boss' ? 'THE WHOLE STADIUM CHANTS!' : 'SHOCKWAVE!', css(COLORS.gold));
     const cx = c.x * TILE + 8, cy = c.y * TILE + 8;
     for (let i = 0; i < 3; i++) {
       sfx.clap();
@@ -1796,6 +1845,14 @@ export class MissionScene extends Phaser.Scene {
       if (!e.alive || !e.active) continue;
       await this.enemyAct(e);
       if (this.checkEnd()) return;
+      if (e.alive && e.act === 3) {
+        await this.wait(250);
+        const cd = e.clapCd;
+        e.clapCd = Math.max(cd, 1);
+        await this.enemyAct(e);
+        e.clapCd = cd;
+        if (this.checkEnd()) return;
+      }
       await this.wait(200);
     }
     this.startPlayerPhase();

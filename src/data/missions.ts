@@ -9,10 +9,10 @@
 //  Full cover: B bar  A amp  O tree  o ring post  I pillar  F fountain  R arcade cabinet  Q podium
 //  P band spawn
 //  Enemies: E Sweet Caroline  D Don't Stop Believin'  Y Shake It Off  (basic)
-//           K Karaoke Power Ballad  U Coffeehouse Acoustic  V Wonderwall  r Mr. Brightside  (elite)
+//           K Teenage Dirtbag  U Tennessee Whiskey  V Wonderwall  r Mr. Brightside  (elite)
 //           l Livin' on a Prayer (elite medic)
 //           M DJ Megamix (tank)   * Free Bird (legendary: teleports)   @ Hotel California (legendary: mind control)
-//           X Stadium Clap-Along (boss)  Z The Encore Anthem (final boss)
+//           X Seven Nation Army (boss)  Z Bohemian Rhapsody (final boss, three acts)
 
 /** One line of a pre-show scene. `who` is 'npc' (the mission's guest), 'band' (your first song) or an enemy id. */
 export interface Line { who: string; text: string }
@@ -126,8 +126,8 @@ export const MISSIONS: MissionDef[] = [
   },
   {
     id: 'hoosier-dome', venue: 'HOOSIER DOME', where: 'MID-SIZE VENUE', theme: 'hoosierdome',
-    blurb: 'A REAL VENUE WITH A REAL STAGE, AND A STADIUM CLAP-ALONG WHO WANTS IT.',
-    intro: 'BOSS FIGHT: THE STADIUM CLAP-ALONG!',
+    blurb: 'A REAL VENUE WITH A REAL STAGE, AND SEVEN NATION ARMY WANTS IT.',
+    intro: 'BOSS FIGHT: SEVEN NATION ARMY!',
     map: [
       '###N######N######N##',
       '#..cc......B.E..sss#',
@@ -190,8 +190,8 @@ export const MISSIONS: MissionDef[] = [
   },
   {
     id: 'kilroys', venue: "KILROY'S SPORTS", where: 'COLLEGE SPORTS BAR', theme: 'kilroys',
-    blurb: 'EVERY TV IS ON. SO IS THE STADIUM CLAP-ALONG, AND HE BROUGHT FRIENDS.',
-    intro: 'GAME DAY. THE CLAP-ALONG IS BACK!',
+    blurb: 'EVERY TV IS ON. SO IS SEVEN NATION ARMY, AND HE BROUGHT FRIENDS.',
+    intro: 'GAME DAY. THE STADIUM CHANT IS BACK!',
     map: [
       '##N###N###N###N###N#',
       '#RRR.........T.E.RR#',
@@ -206,7 +206,7 @@ export const MISSIONS: MissionDef[] = [
   },
   {
     id: 'central-park', venue: 'CENTRAL PARK PLAZA', where: 'VALPARAISO, IN', theme: 'park',
-    blurb: 'THE HOMETOWN HEADLINER. THE ENCORE ANTHEM HAS TAKEN THE AMPHITHEATER.',
+    blurb: 'THE HOMETOWN HEADLINER. BOHEMIAN RHAPSODY HAS TAKEN THE AMPHITHEATER.',
     intro: 'FINAL SHOW: TAKE BACK THE AMPHITHEATER!',
     map: [
       'OO#N###N#OO#N###N#OO',

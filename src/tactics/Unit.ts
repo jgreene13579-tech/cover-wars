@@ -46,7 +46,9 @@ export class Unit {
   controlling: Unit | null = null; // Hotel California: who he has checked in
   controlledBy: Unit | null = null; // band member: who has them checked in
   mcCd = 0;
-  healCd = 0; // Livin' on a Prayer: turns until the next patch-up // Hotel California: turns until he can check someone in again
+  healCd = 0;
+  act = 1; // Bohemian Rhapsody: 1 ballad, 2 opera, 3 rock
+  barTint?: number; // overrides the HP bar colour // Livin' on a Prayer: turns until the next patch-up // Hotel California: turns until he can check someone in again
   sprite: Phaser.GameObjects.Sprite;
   bar: Phaser.GameObjects.Graphics;
   private stealthTween?: Phaser.Tweens.Tween;
@@ -95,7 +97,7 @@ export class Unit {
     if (!this.alive) return;
     const w = 14;
     g.fillStyle(0x0b0710, 1).fillRect(-8, 0, 16, 4);
-    const col = this.team === 'player' ? 0x6dff7a : this.boss ? 0xffd34f : 0xff4f4f;
+    const col = this.barTint ?? (this.team === 'player' ? 0x6dff7a : this.boss ? 0xffd34f : 0xff4f4f);
     g.fillStyle(col, 1);
     if (this.maxHp <= 7) {
       for (let i = 0; i < this.hp; i++) {
