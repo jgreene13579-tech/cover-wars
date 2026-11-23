@@ -2,6 +2,8 @@
 // pixel is a chunky 2x2 block; HUD text uses an 8px pixel font at 1x.
 export const GAME_W = 640;
 export const GAME_H = 360;
+/** The canvas is drawn at this multiple of 640x360 so small text keeps every pixel. Layout stays in 640x360 units. */
+export const RES = 2;
 export const TILE = 16;
 export const WS = 2; // world scale
 export const MAP_COLS = 20;
@@ -19,7 +21,7 @@ export const COLORS = {
   gold: 0xffd34f,
   red: 0xff4f4f,
   green: 0x6dff7a,
-  gray: 0x8a7fa0,
+  gray: 0xa398bc, // bright enough to read on the dark panels
   white: 0xffffff,
 };
 

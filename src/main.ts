@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_H, GAME_W } from './config';
+import { GAME_H, GAME_W, RES } from './config';
 import { available } from './assets';
 import { setupInstallGuide } from './installGuide';
 import { CHARACTERS } from './data/characters';
@@ -46,8 +46,8 @@ async function start() {
   const game = new Phaser.Game({
     type: Phaser.AUTO,
     parent: 'game',
-    width: GAME_W,
-    height: GAME_H,
+    width: GAME_W * RES,
+    height: GAME_H * RES,
     backgroundColor: '#0b0710',
     pixelArt: true,
     roundPixels: true,
@@ -57,6 +57,14 @@ async function start() {
   });
 
   if (import.meta.env.DEV) (window as unknown as { __game: Phaser.Game }).__game = game;
+
+  // every scene lays out in 640x360; its camera zooms that up to fill the bigger canvas
+  game.events.on(Phaser.Core.Events.PRE_RENDER, () => {
+    for (const s of game.scene.getScenes(true)) {
+      const cam = s.cameras.main;
+      if (cam.zoom !== RES) cam.setZoom(RES).centerOn(GAME_W / 2, GAME_H / 2);
+    }
+  });
 
   // installable web app: cache the game so it plays offline (skipped where workers aren't allowed)
   if (import.meta.env.PROD && 'serviceWorker' in navigator) {

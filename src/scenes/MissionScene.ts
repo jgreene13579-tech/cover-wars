@@ -312,9 +312,9 @@ export class MissionScene extends Phaser.Scene {
   }
 
   toTile(p: Phaser.Input.Pointer): Pos | null {
-    if (p.y >= HUD_Y) return null;
-    const x = Math.floor(p.x / (TILE * WS));
-    const y = Math.floor(p.y / (TILE * WS));
+    if (p.worldY >= HUD_Y) return null;
+    const x = Math.floor(p.worldX / (TILE * WS));
+    const y = Math.floor(p.worldY / (TILE * WS));
     return this.grid.inBounds(x, y) ? { x, y } : null;
   }
 
@@ -2066,7 +2066,7 @@ export class MissionScene extends Phaser.Scene {
         kb?.off('keydown-SPACE', onNext); kb?.off('keydown-ENTER', onNext); kb?.off('keydown-ESC', onSkip);
         resolve(r);
       };
-      const onNext = (p?: Phaser.Input.Pointer) => finish(p?.x !== undefined && this.skipZone?.contains(p.x, p.y) ? 'skip' : 'next');
+      const onNext = (p?: Phaser.Input.Pointer) => finish(p?.worldX !== undefined && this.skipZone?.contains(p.worldX, p.worldY) ? 'skip' : 'next');
       const onSkip = () => finish('skip');
       // ignore the click that might still be in flight
       this.time.delayedCall(120, () => {
