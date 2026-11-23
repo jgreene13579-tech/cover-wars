@@ -15,7 +15,7 @@ interface ResultData {
   killsBy?: Record<string, number>; downed?: string[];
 }
 
-export const REWARD = { perKill: 10, perSurvivor: 15 };
+export const REWARD = { perKill: 20, perSurvivor: 15 };
 
 const COIN_X0 = 24;
 const COIN_X1 = 300;
