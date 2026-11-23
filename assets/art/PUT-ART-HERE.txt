@@ -1,0 +1,6 @@
+Drop band art in this folder:
+
+  logo.png  (or logo.jpg)   -> replaces the text title on the title screen
+  album.png (or album.jpg)  -> reserved for the album cover
+
+A transparent PNG logo looks best on the dark background.

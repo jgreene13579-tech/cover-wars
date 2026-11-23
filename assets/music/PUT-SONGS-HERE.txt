@@ -1,0 +1,25 @@
+Drop the band's MP3s in this folder with these exact names:
+
+  2nd album
+  ice.mp3                               -> Ice
+  dotted-line.mp3                       -> Dotted Line
+  sweet-november.mp3                    -> Sweet, Sweet November
+  every-song-youve-never-heard.mp3      -> Every Song You've Never Heard (ESYNH)
+  toast.mp3                             -> Toast
+  distraction.mp3                       -> Distraction
+  pen-and-paper.mp3                     -> Pen & Paper
+  indy-blvd.mp3                         -> Indy Blvd
+  been-here-before.mp3                  -> Been Here Before
+
+  1st album (Mindfully Blind)
+  wreck.mp3                             -> Wreck
+  vision.mp3                            -> Vision
+  fire-sale.mp3                         -> Fire Sale
+  electric-ones.mp3                     -> Electric Ones
+  no-running.mp3                        -> No Running
+  mindfully-blind.mp3                   -> Mindfully Blind
+  glass-slipper.mp3                     -> Glass Slipper
+  crown.mp3                             -> Crown
+
+Selecting a character in battle crossfades to their song.
+Until a song is here, a chiptune placeholder plays instead.
