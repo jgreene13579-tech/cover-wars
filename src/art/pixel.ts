@@ -9,6 +9,15 @@ const OUTLINE = 0x0b0710;
 
 export const hex = (n: number) => '#' + n.toString(16).padStart(6, '0');
 
+/** Scale a colour's brightness (0.8 = 20% darker, 1.15 = 15% lighter). */
+export function tone(n: number, f: number) {
+  const ch = (s: number) => Math.max(0, Math.min(255, Math.round(((n >> s) & 255) * f)));
+  return (ch(16) << 16) | (ch(8) << 8) | ch(0);
+}
+
+/** Keys that are tiny details (eyes, mouths, lenses) and never get shaded. */
+const NO_SHADE = new Set(['e', 'm', 'L', 'O', 'v', 'w']);
+
 // Legs shared by every character; palette keys p (pants) and k (boots).
 export const LEGS = {
   stand: [
@@ -56,7 +65,7 @@ export function charFrames(top: string[]): string[][] {
 }
 
 /** Paint a pixel grid with a 1px dark outline for that crisp 8-bit pop. */
-export function paint(ctx: CanvasRenderingContext2D, rows: string[], pal: Palette, ox = 0, oy = 0, outline = true) {
+export function paint(ctx: CanvasRenderingContext2D, rows: string[], pal: Palette, ox = 0, oy = 0, outline = true, shade = false) {
   const h = rows.length;
   const w = Math.max(...rows.map((r) => r.length));
   const solid = (x: number, y: number) => {
@@ -74,7 +83,15 @@ export function paint(ctx: CanvasRenderingContext2D, rows: string[], pal: Palett
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       if (!solid(x, y)) continue;
-      ctx.fillStyle = hex(pal[rows[y][x]]);
+      const k = rows[y][x];
+      let col = pal[k];
+      if (shade && !NO_SHADE.has(k)) {
+        // one light source for the whole cast: up and to the left
+        if (!solid(x + 1, y) || !solid(x, y + 1)) col = tone(col, 0.7);
+        else if (!solid(x + 2, y)) col = tone(col, 0.86); // soft second step of the shadow
+        else if (!solid(x - 1, y) || !solid(x, y - 1)) col = tone(col, 1.18);
+      }
+      ctx.fillStyle = hex(col);
       ctx.fillRect(ox + x, oy + y, 1, 1);
     }
   }
@@ -95,7 +112,7 @@ export function makeCharacter(scene: Phaser.Scene, key: string, top: string[], p
   const t = scene.textures.createCanvas(key, SPR_W * frames.length, SPR_H)!;
   const ctx = t.getContext();
   frames.forEach((f, i) => {
-    paint(ctx, f, pal, i * SPR_W, 0);
+    paint(ctx, f, pal, i * SPR_W, 0, true, true);
     t.add(`f${i}`, 0, i * SPR_W, 0, SPR_W, SPR_H);
   });
   t.refresh();

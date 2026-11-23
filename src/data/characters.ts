@@ -302,13 +302,13 @@ export const CHARACTERS: CharacterDef[] = [
     },
     price: 200, startsUnlocked: false, music: 'fire-sale.mp3', idleFx: 'ember',
     palette: {
-      F: 0xff4f1a, f: 0xffc83a, s: 0xe8b08a, e: 0x1a1020, m: 0xa04a4a,
+      F: 0xa8381e, f: 0xd8602a, s: 0xe8b08a, e: 0x1a1020, m: 0xa04a4a,
       R: 0xd8344a, r: 0x8a1a2a, w: 0xf2f2f2, t: 0x1a1020, Y: 0xffd34f,
       g: 0xc8ccd8, G: 0xff9a2e, p: 0x2e2b3a, k: 0x0f0d14,
     },
     art: [
-      '.....f..F.f.....',
-      '....FfFFfFFf....',
+      '................',
+      '.....FFFFfF.....',
       '....FFFFFFFFF...',
       '....FFssssssF...',
       '....Fssssesse...',
@@ -338,13 +338,13 @@ export const CHARACTERS: CharacterDef[] = [
     },
     price: 250, startsUnlocked: false, music: 'electric-ones.mp3', idleFx: 'spark',
     palette: {
-      Z: 0xfff04f, z: 0xffffff, s: 0xd9a27a, C: 0x4fe3ff, m: 0x7a2a4a,
+      Z: 0xe8d27a, z: 0xfff4c0, s: 0xd9a27a, C: 0x4fe3ff, m: 0x7a2a4a,
       U: 0x5a2a9a, c: 0xb8bcc8, p: 0x2a1a4a, k: 0x0f0d14,
     },
     art: [
-      '.......Z........',
-      '......ZZ...Z....',
-      '.....ZZz..ZZ....',
+      '................',
+      '.....ZZZZz......',
+      '....ZZZZZZZZz...',
       '....ZZZZZZZZ....',
       '....ssssssss....',
       '....sCsssCss....',
@@ -566,9 +566,9 @@ export const CHARACTERS: CharacterDef[] = [
     // Hype guy: big blue foam finger held high, spiky hair, black shades, huge grin,
     // neon green tracksuit with white stripes, white sneakers.
     palette: {
-      F: 0x2a7aff, f: 0x1a4aaa, H: 0x3a2416, s: 0xe0a47a, O: 0x111118, w: 0xffffff,
-      m: 0xf0f0f0, N: 0x5aff7a, n: 0x2a9a4a,
-      g: 0x5a5f6a, G: 0x2a2d34, p: 0x5aff7a, k: 0xf0f0f0,
+      F: 0x2a5ab0, f: 0x1a3a78, H: 0x3a2416, s: 0xe0a47a, O: 0x111118, w: 0xe8e8e0,
+      m: 0xf0f0f0, N: 0x2f7d52, n: 0x1f5038,
+      g: 0x5a5f6a, G: 0x2a2d34, p: 0x2f7d52, k: 0xe0e0d8,
     },
     art: [
       '.F..............',
@@ -581,10 +581,10 @@ export const CHARACTERS: CharacterDef[] = [
       '.NN...ssssss....',
       '.NN.NNwNNwNNN...',
       '.NNNNNwNNwNNNN..',
-      '....NNwNNwNNNggg',
-      '....NNwNNwNNsGGG',
-      '....NNwNNwNNNG..',
-      '....nnnnnnnnn...',
+      '...NNNwNNwNNNggg',
+      '...NNNwNNwNNsGGG',
+      '...NNNwNNwNNNG..',
+      '...nnnnnnnnnn...',
     ],
   },
   {

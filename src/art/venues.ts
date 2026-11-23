@@ -84,9 +84,9 @@ export const THEMES: Record<string, Theme> = {
   },
   healer: {
     id: 'healer',
-    floor: { style: 'trippy', c: ['#5a1650', '#163e5e', '#5a4a14', '#145a32', '#36165e'] },
-    floor2: { style: 'trippy', c: ['#2a1050', '#4a1a8a', '#ff4fa3', '#1a1030'] },
-    wall: { style: 'trippy', c: ['#3a1a6a', '#ff4fa3', '#4fe3ff', '#ffd34f'] },
+    floor: { style: 'trippy', c: ['#2c1440', '#24184c', '#1e2450', '#2a1a44'] },
+    floor2: { style: 'trippy', c: ['#3a1a5e', '#4a1e6e', '#6a2a7e', '#32145a'] },
+    wall: { style: 'trippy', c: ['#2a1450', '#6a2a8a', '#2a5a7a', '#7a5a2a'] },
     stage: ['#1a1030', '#3a2a6a', '#6dff7a', '#ffd34f'],
     decor: 'eye',
     trippy: true,
@@ -190,7 +190,7 @@ function drawFloor(c: Ctx, style: FloorStyle, k: string[], seed: number) {
           const band = Math.floor((x + y + Math.sin((x - y) / 3) * 3 + 40) / 3);
           px(c, k[(band + off) % k.length], x, y);
         }
-      for (let i = 0; i < 3; i++) px(c, '#ffffff', Math.floor(r() * 16), Math.floor(r() * 16));
+      if (r() < 0.5) px(c, '#c8a8ff', Math.floor(r() * 16), Math.floor(r() * 16)); // a rare dim sparkle
       break;
     }
   }

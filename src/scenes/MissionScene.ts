@@ -72,6 +72,7 @@ export class MissionScene extends Phaser.Scene {
   grid!: Grid;
   units: Unit[] = [];
   tileImgs: Phaser.GameObjects.Image[][] = [];
+  shadows!: Phaser.GameObjects.Graphics;
   world!: Phaser.GameObjects.Container;
   under!: Phaser.GameObjects.Graphics; // ranges, paths (below units)
   over!: Phaser.GameObjects.Graphics; // reticles, aim lines (above units)
@@ -137,6 +138,10 @@ export class MissionScene extends Phaser.Scene {
         this.tileImgs[y].push(img);
       }
     }
+    // soft shadows where walls and cover meet the floor
+    this.shadows = this.add.graphics();
+    tilesC.add(this.shadows);
+    this.drawShadows();
     // venue lighting: a glow on the stage, plus the room's own mood
     const lights = this.add.graphics();
     tilesC.add(lights);
@@ -158,12 +163,22 @@ export class MissionScene extends Phaser.Scene {
       }
     }
     if (this.theme.trippy) {
-      const glow = this.add.rectangle(0, 0, mapW, mapH, 0xff4fa3, 0.14).setOrigin(0).setBlendMode(Phaser.BlendModes.ADD);
+      const glow = this.add.rectangle(0, 0, mapW, mapH, 0xff4fa3, 0.08).setOrigin(0).setBlendMode(Phaser.BlendModes.ADD);
       tilesC.add(glow);
       this.tweens.addCounter({
         from: 0, to: 360, duration: 6000, repeat: -1,
-        onUpdate: (tw) => glow.setFillStyle(Phaser.Display.Color.HSVToRGB((tw.getValue() ?? 0) / 360, 0.7, 1).color, 0.14),
+        onUpdate: (tw) => glow.setFillStyle(Phaser.Display.Color.HSVToRGB((tw.getValue() ?? 0) / 360, 0.7, 1).color, 0.08),
       });
+    }
+    // a soft vignette pulls the eye to the middle of the room
+    const vig = this.add.graphics();
+    tilesC.add(vig);
+    for (let i = 0; i < 6; i++) {
+      const a = 0.07 * (1 - i / 6);
+      vig.fillStyle(0x0b0710, a);
+      vig.fillRect(0, mapH - 3 - i * 3, mapW, 3);
+      vig.fillRect(i * 3, 0, 3, mapH);
+      vig.fillRect(mapW - 3 - i * 3, 0, 3, mapH);
     }
 
     const underC = this.add.container(0, 0).setScale(WS).setDepth(1);
@@ -230,6 +245,23 @@ export class MissionScene extends Phaser.Scene {
   }
 
   // ================================================================ helpers
+
+  /** Walls and cover cast a short shadow down and to the right onto open floor. */
+  drawShadows() {
+    const g = this.shadows;
+    g.clear();
+    for (let y = 0; y < this.grid.rows; y++)
+      for (let x = 0; x < this.grid.cols; x++) {
+        if (this.grid.walkable(x, y)) continue;
+        if (this.grid.walkable(x, y + 1)) {
+          g.fillStyle(0x0b0710, 0.3).fillRect(x * TILE, (y + 1) * TILE, TILE, 2);
+          g.fillStyle(0x0b0710, 0.14).fillRect(x * TILE, (y + 1) * TILE + 2, TILE, 3);
+        }
+        if (this.grid.walkable(x + 1, y)) {
+          g.fillStyle(0x0b0710, 0.2).fillRect((x + 1) * TILE, y * TILE + 3, 2, TILE - 3);
+        }
+      }
+  }
 
   players() { return this.units.filter((u) => u.alive && u.isPlayer && !u.decoy); }
   decoys() { return this.units.filter((u) => u.alive && u.decoy); }
@@ -1335,6 +1367,7 @@ export class MissionScene extends Phaser.Scene {
     if (!this.grid.destructible(x, y)) return;
     this.grid.set(x, y, 'rubble');
     this.tileImgs[y][x].setTexture(venueTile(this.theme.id, 'rubble', x, y));
+    this.drawShadows();
     this.burst(x * TILE + 8, y * TILE + 8, colors, 10, 16, 500);
   }
 
@@ -1569,6 +1602,7 @@ export class MissionScene extends Phaser.Scene {
     await this.tween({ targets: box, x: to.x, duration: 320, ease: 'Linear' });
     box.destroy();
     this.grid.set(t.x, t.y, 'barricade');
+    this.drawShadows();
     this.tileImgs[t.y][t.x].setTexture(venueTile(this.theme.id, 'barricade', t.x, t.y));
     const img = this.tileImgs[t.y][t.x];
     img.setScale(1, 0.2);
