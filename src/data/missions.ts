@@ -7,7 +7,7 @@
 //              k keg  G grill  n bench  h giant mushroom  W folding table  H chair  J flag pole
 //              q cooler  x knocked-over lawn chair  p beer pong table  t trash bags
 //  Full cover: B bar  A amp  O tree  o ring post  I pillar  F fountain  R arcade cabinet  Q podium
-//  P band spawn
+//  P band spawn (7 per map: one per set-list slot)
 //  Enemies: E Sweet Caroline  D Don't Stop Believin'  Y Shake It Off  (basic)
 //           K Teenage Dirtbag  U Tennessee Whiskey  V Wonderwall  r Mr. Brightside  (elite)
 //           l Livin' on a Prayer (elite medic)
@@ -66,7 +66,7 @@ export const MISSIONS: MissionDef[] = [
       '#P..WWW...sssEs..H.#',
       '#...H.....J...WW...#',
       '#PP......QQ....HD..#',
-      '#..WWW...J....W.H..#',
+      '#P.WWW...J....W.H..#',
       '#PP.....HWWH...HY..#',
       '#...H.......WWW....#',
       '#P......H....BBB...#',
@@ -91,7 +91,7 @@ export const MISSIONS: MissionDef[] = [
       '#P.c.....,,,.cc.sEs#',
       '#.....kk.,C,..I.c..#',
       '#PP...I..,,,...SD..#',
-      '#..cc.....k..cY..c.#',
+      '#P.cc.....k..cY..c.#',
       '#PP.c..CC..I....cE.#',
       '#...I..k..C..cD....#',
       '#P..cc.I.....cY.Scc#',
@@ -116,7 +116,7 @@ export const MISSIONS: MissionDef[] = [
       'fP..x......qD..sssMf',
       'f...C...pp....t..x.f',
       'fPP...k...q..xE....f',
-      'f..xx....C....k..t.f',
+      'fP.xx....C....k..t.f',
       'fPP....pp..q.tD.xY.f',
       'f..t..k....x...q...f',
       'fP...ffff....xE.qY.f',
@@ -141,7 +141,7 @@ export const MISSIONS: MissionDef[] = [
       '#P.SSS....T.S....sM#',
       '#.......TT...I.SEss#',
       '#PP..I..,,,,,.TD.ss#',
-      '#..T....,,T,,.SD.AA#',
+      '#P.T....,,T,,.SD.AA#',
       '#PP.SS...I....TK.ss#',
       '#....S..TT..SY...sr#',
       '#P..I..T....SE.T.ss#',
@@ -167,7 +167,7 @@ export const MISSIONS: MissionDef[] = [
       '#P....cc.T....A.sXs#',
       '#...S...c....cU.sss#',
       '#PP...,,A,,,....A..#',
-      '#..T..,,,,,,.cY....#',
+      '#P.T..,,,,,,.cY....#',
       '#PP..cc...T...cK...#',
       '#....S..A...cV..cY.#',
       '#P.....BBBBB..cD...#',
@@ -192,7 +192,7 @@ export const MISSIONS: MissionDef[] = [
       '#P.....o----o..H...#',
       '#..k...|mmmm|..YWD.#',
       '#PP....mmmMmm..Hkl.#',
-      '#..k...|mmmm|.HK...#',
+      '#P.k...|mmmm|.HK...#',
       '#PP....o----o...WY.#',
       '#..HH..........r.kE#',
       '#P.LLLL....,,,..LLL#',
@@ -218,7 +218,7 @@ export const MISSIONS: MissionDef[] = [
       '#P....hh..,h,h,..ss#',
       '#..h...A.,,,,,.hY.Y#',
       '#PP..hA.....h..h.hM#',
-      '#..h....h...h@.....#',
+      '#P.h....h...h@.....#',
       '#PP.h..A...,h,.hD..#',
       '#..hh...A.....h.h*.#',
       '#P...h....hh.hl....#',
@@ -243,7 +243,7 @@ export const MISSIONS: MissionDef[] = [
       '#P.S.S.S.S...Y..sUs#',
       '#..CTC......T..Tr..#',
       '#PP.,,,,,..CTC...SM#',
-      '#...,T,,,.....T.Sl.#',
+      '#P..,T,,,.....T.Sl.#',
       '#PP.,,,,,..CTD.S@V.#',
       '#..CTC........TU...#',
       '#P.......CTC....SS.#',
@@ -269,7 +269,7 @@ export const MISSIONS: MissionDef[] = [
       '#P.S.....BBBB...sXs#',
       '#.....T.SB..BS..TU.#',
       '#PP..CC..BBBB.Sl.r.#',
-      '#....T....TD..TM..@#',
+      '#P...T....TD..TM..@#',
       '#PP.,,,,..T.SK...R*#',
       '#...,CC,.....TY.RR.#',
       '#P..,,,,.T..SV..RRR#',
@@ -295,7 +295,7 @@ export const MISSIONS: MissionDef[] = [
       '.P..,I,,,I,...b.ssZs',
       '.b..,,,n,,,.En..ssss',
       '.PP.,I,,,I,..UnD...n',
-      '..O.,,,,,,,b.l..F...',
+      '.PO.,,,,,,,b.l..F...',
       '.PP.....b....bM..*..',
       '..n...O..b..nV...@..',
       '.P.....n..br....O.Y.',

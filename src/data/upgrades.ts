@@ -8,6 +8,10 @@ export interface UpgradeDef {
   desc: string;
   prices: number[]; // one price per level
   requires?: string; // another upgrade that has to be bought first
+  /** Per-level card titles (the card shows the next level's name). */
+  levelNames?: string[];
+  /** Save keys, one per level, for upgrades that were once separate cards (keeps old saves working). */
+  keys?: string[];
 }
 
 /** The standard guns, grouped for damage upgrades. */
@@ -18,8 +22,8 @@ export const GUN_GROUPS: { id: string; kinds: GunKind[] }[] = [
 ];
 
 export const UPGRADES: UpgradeDef[] = [
-  { id: 'squad5', name: 'ENCORE 1', desc: 'ADDS A 5TH SONG TO YOUR SET LIST FOR EVERY SHOW.', prices: [1500] },
-  { id: 'squad6', name: 'ENCORE 2', desc: 'ADDS A 6TH SONG TO YOUR SET LIST FOR EVERY SHOW.', prices: [3000], requires: 'squad5' },
+  { id: 'encore', name: 'ENCORE', levelNames: ['ENCORE 1', 'ENCORE 2', 'TIGHT 45'], keys: ['squad5', 'squad6', 'squad7'],
+    desc: 'EACH LEVEL ADDS A SONG TO YOUR SET LIST FOR EVERY SHOW: 5, THEN 6, THEN 7.', prices: [1000, 2000, 3000] },
   { id: 'dmg-close', name: 'CLOSE QUARTERS', desc: '+1 DAMAGE PER LEVEL: PISTOL, SHOTGUN, DOUBLE-BARREL SAWED-OFF.', prices: [500, 1000, 1800] },
   { id: 'dmg-auto', name: 'AUTOMATICS', desc: '+1 DAMAGE PER LEVEL: SMG, ASSAULT RIFLE, LMG.', prices: [500, 1000, 1800] },
   { id: 'dmg-spec', name: 'SPECIALIST', desc: '+1 DAMAGE PER LEVEL: DUAL PISTOLS, PRECISION RIFLE, SCOPED CARBINE.', prices: [500, 1000, 1800] },
@@ -32,8 +36,17 @@ export const UPGRADES: UpgradeDef[] = [
 
 type WithUpgrades = { upgrades: Record<string, number> };
 
-export const upgradeLevel = (save: WithUpgrades, id: string) => save.upgrades[id] ?? 0;
-export const squadSize = (save: WithUpgrades) => 4 + upgradeLevel(save, 'squad5') + upgradeLevel(save, 'squad6');
+export function upgradeLevel(save: WithUpgrades, id: string) {
+  const keys = UPGRADES.find((u) => u.id === id)?.keys;
+  return keys ? keys.filter((k) => (save.upgrades[k] ?? 0) > 0).length : save.upgrades[id] ?? 0;
+}
+/** Records one more level of an upgrade in the save. */
+export function addUpgradeLevel(save: WithUpgrades, u: UpgradeDef) {
+  const lvl = upgradeLevel(save, u.id);
+  if (u.keys) save.upgrades[u.keys[lvl]] = 1;
+  else save.upgrades[u.id] = lvl + 1;
+}
+export const squadSize = (save: WithUpgrades) => 4 + upgradeLevel(save, 'encore');
 export const actionsPerTurn = (save: WithUpgrades) => 2 + upgradeLevel(save, 'ap');
 export const bonusHp = (save: WithUpgrades) => upgradeLevel(save, 'kevlar');
 export const hasSecondWind = (save: WithUpgrades) => upgradeLevel(save, 'secondwind') > 0;

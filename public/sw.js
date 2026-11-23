@@ -1,6 +1,6 @@
 // Keeps the game playable offline once it has loaded once.
 // Pages are fetched fresh when online (so updates show up right away); everything else is cache-first.
-const CACHE = 'cover-wars-v3';
+const CACHE = 'cover-wars-v4';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));

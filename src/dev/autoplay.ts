@@ -12,7 +12,7 @@ import { dist, type Pos } from '../tactics/Grid';
 import type { Unit } from '../tactics/Unit';
 import { CHARACTERS } from '../data/characters';
 import { MISSIONS } from '../data/missions';
-import { UPGRADES, squadSize, upgradeLevel } from '../data/upgrades';
+import { UPGRADES, addUpgradeLevel, squadSize, upgradeLevel } from '../data/upgrades';
 import { loadSave, writeSave, progressFor, type SaveData } from '../save';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -30,7 +30,7 @@ async function until(fn: () => boolean, timeout = 180000) {
 const SPEED = 25;
 const BUY_ORDER = ['toast', 'mindfully-blind', 'never-heard', 'wreck', 'vision', 'pen-and-paper', 'glass-slipper',
   'indy-blvd', 'fire-sale', 'no-running', 'crown', 'electric-ones', 'been-here-before', 'distraction'];
-const UPGRADE_ORDER = ['squad5', 'kevlar', 'merch', 'dmg-auto', 'cd', 'dmg-close', 'squad6', 'secondwind', 'dmg-spec', 'ap'];
+const UPGRADE_ORDER = ['encore', 'kevlar', 'merch', 'dmg-auto', 'cd', 'dmg-close', 'encore', 'encore', 'secondwind', 'dmg-spec', 'ap'];
 
 function shotValue(m: Scene, u: Unit, from: Pos, e: Unit) {
   if (!canTarget(m.grid, u, from, e)) return 0;
@@ -151,8 +151,8 @@ function spend(save: SaveData) {
       const lvl = upgradeLevel(save, id);
       if (lvl >= u.prices.length || (u.requires && !upgradeLevel(save, u.requires))) continue;
       // squad-size upgrades only when there is also money for the song to fill the slot
-      const reserve = id.startsWith('squad') ? 300 : 0;
-      if (u.prices[lvl] + reserve <= save.coins) { save.coins -= u.prices[lvl]; save.upgrades[id] = lvl + 1; bought = true; }
+      const reserve = id === 'encore' ? 300 : 0;
+      if (u.prices[lvl] + reserve <= save.coins) { save.coins -= u.prices[lvl]; addUpgradeLevel(save, u); bought = true; }
       // too pricey right now: try the next one on the list
     }
   }

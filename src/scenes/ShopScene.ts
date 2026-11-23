@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, GAME_W, css } from '../config';
 import { CHARACTERS, COMING_SOON } from '../data/characters';
-import { UPGRADES, UpgradeDef, upgradeLevel } from '../data/upgrades';
+import { UPGRADES, UpgradeDef, addUpgradeLevel, upgradeLevel } from '../data/upgrades';
 import { loadSave, writeSave } from '../save';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
@@ -122,7 +122,7 @@ export class ShopScene extends Phaser.Scene {
       const top = u.id === 'ap';
       this.add.rectangle(x, y, w, rowH, top ? 0x2a1438 : COLORS.panel, 0.95).setOrigin(0)
         .setStrokeStyle(2, maxed ? COLORS.green : top ? COLORS.gold : COLORS.border);
-      const name = txt(this, x + 8, y + 6, u.name, 8, maxed ? css(COLORS.green) : top ? css(COLORS.gold) : '#ffffff');
+      const name = txt(this, x + 8, y + 6, u.levelNames?.[Math.min(lvl, max - 1)] ?? u.name, 8, maxed ? css(COLORS.green) : top ? css(COLORS.gold) : '#ffffff');
       // level pips
       for (let k = 0; k < max; k++) {
         this.add.rectangle(x + 14 + name.width + k * 11, y + 6, 8, 8, k < lvl ? COLORS.cyan : 0x0b0710).setOrigin(0).setStrokeStyle(1, COLORS.border);
@@ -149,7 +149,7 @@ export class ShopScene extends Phaser.Scene {
     const price = u.prices[lvl];
     if (fresh.coins < price) return;
     fresh.coins -= price;
-    fresh.upgrades[u.id] = lvl + 1;
+    addUpgradeLevel(fresh, u);
     writeSave(fresh);
     sfx.buy();
     this.cameras.main.flash(150, 255, 211, 79);
