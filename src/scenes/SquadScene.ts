@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { COLORS, GAME_W, css } from '../config';
 import { CHARACTERS } from '../data/characters';
 import { MISSIONS } from '../data/missions';
-import { loadSave, pendingLevelUps } from '../save';
+import { isHardcore, loadSave, pendingLevelUps, resetHardcore } from '../save';
 import { squadSize } from '../data/upgrades';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
@@ -24,6 +24,7 @@ export class SquadScene extends Phaser.Scene {
   /** Keep the last set list between shows. */
   static lastSquad: string[] = [];
   private maxSquad = 4;
+  private fallen = new Set<string>();
 
   constructor() { super('Squad'); }
 
@@ -36,6 +37,7 @@ export class SquadScene extends Phaser.Scene {
     backdrop(this);
     this.mission = data?.mission ?? Math.min(save.cleared, MISSIONS.length - 1);
     this.owned = new Set(save.unlocked);
+    this.fallen = new Set(save.fallen ?? []);
     this.maxSquad = squadSize(save);
     const remembered = SquadScene.lastSquad.filter((id) => this.owned.has(id)).slice(0, squadSize(save));
     this.chosen = remembered.length ? remembered
@@ -52,6 +54,14 @@ export class SquadScene extends Phaser.Scene {
     new Button(this, 108, 318, 90, 28, 'SHOP', () => this.scene.start('Shop'));
     this.countText = txt(this, 290, 332, '', 8, css(COLORS.gold)).setOrigin(0.5);
     this.startBtn = new Button(this, GAME_W - 210, 318, 200, 28, 'START SHOW', () => this.start(), { fill: 0x5a1838, border: COLORS.pink });
+    if (isHardcore() && this.owned.size === 0) {
+      // every song has fallen: offer a fresh run
+      this.add.rectangle(GAME_W / 2, 180, 420, 110, 0x0b0710, 0.95).setStrokeStyle(2, COLORS.red).setDepth(50);
+      txt(this, GAME_W / 2, 140, 'EVERY SONG HAS FALLEN.', 16, css(COLORS.red)).setOrigin(0.5).setDepth(51);
+      txt(this, GAME_W / 2, 164, 'BUY A NEW SONG IN THE SHOP, OR START OVER.', 8, '#c8c0d8').setOrigin(0.5).setDepth(51);
+      new Button(this, GAME_W / 2 - 90, 186, 180, 26, 'NEW HARDCORE RUN', () => { resetHardcore(); SquadScene.lastSquad = []; this.scene.start('Tour'); },
+        { fill: 0x3a0a14, border: COLORS.red }).setDepth(51);
+    }
     this.showDetail(this.cards[0]);
     this.refresh();
     Music.menu(this);
@@ -60,6 +70,7 @@ export class SquadScene extends Phaser.Scene {
   private showDetail(card: RosterCard) {
     const c = card.item.c!;
     if (this.owned.has(c.id)) this.panel.show(card.item);
+    else if (this.fallen.has(c.id)) this.panel.show(card.item, 'FALLEN. GONE FOR GOOD.', css(COLORS.red));
     else this.panel.show(card.item, `LOCKED: ${c.price} COINS IN SHOP`, css(COLORS.red));
   }
 
@@ -82,7 +93,8 @@ export class SquadScene extends Phaser.Scene {
       const n = this.chosen.indexOf(id);
       card.frame.setStrokeStyle(2, n >= 0 ? COLORS.pink : COLORS.border);
       card.frame.setFillStyle(n >= 0 ? 0x241430 : COLORS.panel, 0.95);
-      if (!this.owned.has(id)) card.status.setText(`${card.item.c!.price}`).setColor(css(COLORS.gray));
+      if (this.fallen.has(id)) card.status.setText('FALLEN').setColor(css(COLORS.red));
+      else if (!this.owned.has(id)) card.status.setText(`${card.item.c!.price}`).setColor(css(COLORS.gray));
       else card.status.setText(n >= 0 ? `#${n + 1}` : '').setColor(css(COLORS.gold));
     }
     this.countText.setText(`SET LIST ${this.chosen.length}/${this.maxSquad}`);

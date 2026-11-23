@@ -18,8 +18,8 @@ export const GUN_GROUPS: { id: string; kinds: GunKind[] }[] = [
 ];
 
 export const UPGRADES: UpgradeDef[] = [
-  { id: 'squad5', name: 'FIFTH MEMBER', desc: 'BRING 5 SONGS TO EVERY SHOW INSTEAD OF 4.', prices: [1500] },
-  { id: 'squad6', name: 'SIXTH MEMBER', desc: 'BRING 6 SONGS TO EVERY SHOW.', prices: [3000], requires: 'squad5' },
+  { id: 'squad5', name: 'ENCORE 1', desc: 'ADDS A 5TH SONG TO YOUR SET LIST FOR EVERY SHOW.', prices: [1500] },
+  { id: 'squad6', name: 'ENCORE 2', desc: 'ADDS A 6TH SONG TO YOUR SET LIST FOR EVERY SHOW.', prices: [3000], requires: 'squad5' },
   { id: 'dmg-close', name: 'CLOSE QUARTERS', desc: '+1 DAMAGE PER LEVEL: PISTOL, SHOTGUN, DOUBLE-BARREL SAWED-OFF.', prices: [500, 1000, 1800] },
   { id: 'dmg-auto', name: 'AUTOMATICS', desc: '+1 DAMAGE PER LEVEL: SMG, ASSAULT RIFLE, LMG.', prices: [500, 1000, 1800] },
   { id: 'dmg-spec', name: 'SPECIALIST', desc: '+1 DAMAGE PER LEVEL: DUAL PISTOLS, PRECISION RIFLE, SCOPED CARBINE.', prices: [500, 1000, 1800] },

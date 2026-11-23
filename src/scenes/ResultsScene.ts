@@ -4,7 +4,7 @@ import { CHARACTERS, getCharacter } from '../data/characters';
 import { MISSIONS, winBonus } from '../data/missions';
 import { MAX_LEVEL, addXp, xpFor, xpToNext } from '../data/progress';
 import { coinMultiplier } from '../data/upgrades';
-import { loadSave, pendingLevelUps, progressFor, writeSave } from '../save';
+import { HARDCORE_COIN_BONUS, isHardcore, loadSave, pendingLevelUps, progressFor, writeSave } from '../save';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
 import { sfx } from '../audio/Synth';
@@ -34,9 +34,15 @@ export class ResultsScene extends Phaser.Scene {
     if (d.victory) lines.push([`STANDING ${d.survivors} x ${REWARD.perSurvivor}`, d.survivors * REWARD.perSurvivor]);
     const save = loadSave();
     const mult = coinMultiplier(save);
-    if (mult > 1) {
-      const base = lines.reduce((a, [, n]) => a + n, 0);
-      lines.push([`MERCH SALES +${Math.round((mult - 1) * 100)}%`, Math.round(base * (mult - 1))]);
+    const baseCoins = lines.reduce((a, [, n]) => a + n, 0);
+    if (mult > 1) lines.push([`MERCH SALES +${Math.round((mult - 1) * 100)}%`, Math.round(baseCoins * (mult - 1))]);
+    const hardcore = isHardcore();
+    if (hardcore) lines.push([`HARDCORE +${Math.round(HARDCORE_COIN_BONUS * 100)}%`, Math.round(baseCoins * HARDCORE_COIN_BONUS)]);
+    // hardcore: anyone knocked out is gone for the rest of the run
+    const fallenNow = hardcore ? (d.downed ?? []).filter((id) => save.unlocked.includes(id)) : [];
+    if (fallenNow.length) {
+      save.unlocked = save.unlocked.filter((id) => !fallenNow.includes(id));
+      save.fallen = [...new Set([...(save.fallen ?? []), ...fallenNow])];
     }
     const earned = lines.reduce((a, [, n]) => a + n, 0);
 
@@ -87,7 +93,12 @@ export class ResultsScene extends Phaser.Scene {
       onUpdate: (tw) => count.setText(`${Math.round(tw.getValue() ?? save.coins)}`),
     });
 
-    const affordable = CHARACTERS.filter((c) => !save.unlocked.includes(c.id) && c.price <= save.coins);
+    if (fallenNow.length) {
+      const names = fallenNow.map((id) => getCharacter(id).short).join(', ');
+      const t = txt(this, (COIN_X0 + COIN_X1) / 2, totalY + 52, `GONE FOR GOOD: ${names}`, 8, css(COLORS.red)).setOrigin(0.5);
+      if (t.width > COIN_X1 - COIN_X0) t.setScale((COIN_X1 - COIN_X0) / t.width);
+    }
+    const affordable = CHARACTERS.filter((c) => !save.unlocked.includes(c.id) && !(save.fallen ?? []).includes(c.id) && c.price <= save.coins);
     if (affordable.length) {
       const msg = txt(this, (COIN_X0 + COIN_X1) / 2, totalY + 34, `NEW SONG AFFORDABLE: ${affordable[0].short}!`, 8, css(COLORS.pink)).setOrigin(0.5).setAlpha(0);
       if (msg.width > COIN_X1 - COIN_X0) msg.setScale((COIN_X1 - COIN_X0) / msg.width);
@@ -125,7 +136,7 @@ export class ResultsScene extends Phaser.Scene {
     if (compact) name.setScale(0.75);
     if (name.displayWidth > 120) name.setScale((name.scale * 120) / name.displayWidth);
     const lvl = txt(this, XP_X + XP_W - 6, y + (compact ? 3 : 5), `LV ${r.startLevel}`, 8, css(COLORS.cyan)).setOrigin(1, 0);
-    const why = `+${r.gain} XP${r.kills ? `  ${r.kills} KO` : ''}${r.downed ? '  (DOWNED)' : ''}`;
+    const why = `+${r.gain} XP${r.kills ? `  ${r.kills} KO` : ''}${r.downed ? (isHardcore() ? '  (FALLEN)' : '  (DOWNED)') : ''}`;
     txt(this, XP_X + 34, y + (compact ? 11 : 17), why, 8, css(COLORS.gold)).setScale(0.75);
 
     const barX = XP_X + 34;

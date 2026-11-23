@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, GAME_W, css } from '../config';
 import { MISSIONS, enemyCount, winBonus } from '../data/missions';
-import { loadSave } from '../save';
+import { isHardcore, loadSave } from '../save';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
 import { Music } from '../audio/Music';
@@ -25,7 +25,7 @@ export class TourScene extends Phaser.Scene {
     this.rows = [];
 
     txt(this, GAME_W / 2, 10, 'TOUR DATES', 16, css(COLORS.pink)).setOrigin(0.5, 0);
-    txt(this, GAME_W / 2, 31, 'EVERY VENUE WE PLAYED GROWING UP', 8, css(COLORS.gray)).setOrigin(0.5, 0);
+    txt(this, GAME_W / 2, 31, isHardcore() ? 'HARDCORE RUN: FALLEN SONGS ARE GONE FOR GOOD' : 'EVERY VENUE WE PLAYED GROWING UP', 8, isHardcore() ? css(COLORS.red) : css(COLORS.gray)).setOrigin(0.5, 0);
 
     // two columns of five shows
     MISSIONS.forEach((m, i) => {

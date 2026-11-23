@@ -56,7 +56,8 @@ export class ShopScene extends Phaser.Scene {
     for (const card of this.cards) {
       const c = card.item.c;
       if (!c) continue;
-      if (save.unlocked.includes(c.id)) card.status.setText('OWNED').setColor(css(COLORS.green));
+      if ((save.fallen ?? []).includes(c.id)) card.status.setText('FALLEN').setColor(css(COLORS.red));
+      else if (save.unlocked.includes(c.id)) card.status.setText('OWNED').setColor(css(COLORS.green));
       else card.status.setText(`${c.price}`).setColor(css(save.coins >= c.price ? COLORS.gold : COLORS.gray));
     }
     this.buyBtn = new Button(this, PANEL_X + 12, GRID_Y + PANEL_H - 30, PANEL_W - 24, 22, 'BUY', () => this.buy(),
@@ -74,6 +75,11 @@ export class ShopScene extends Phaser.Scene {
     for (const card of this.cards) card.frame.setStrokeStyle(2, card.item === item ? COLORS.cyan : COLORS.border);
     const c = item.c;
     if (!c) { this.panel.show(item); this.buyBtn.setVisible(false); return; }
+    if ((save.fallen ?? []).includes(c.id)) {
+      this.panel.show(item, 'FALLEN. GONE FOR GOOD THIS RUN.', css(COLORS.red));
+      this.buyBtn.setVisible(false);
+      return;
+    }
     const owned = save.unlocked.includes(c.id);
     if (owned) {
       this.panel.show(item, 'ON THE SET LIST', css(COLORS.green));
@@ -89,7 +95,7 @@ export class ShopScene extends Phaser.Scene {
     const c = this.current?.c;
     if (!c) return;
     const fresh = loadSave();
-    if (fresh.coins < c.price || fresh.unlocked.includes(c.id)) return;
+    if (fresh.coins < c.price || fresh.unlocked.includes(c.id) || (fresh.fallen ?? []).includes(c.id)) return;
     fresh.coins -= c.price;
     fresh.unlocked.push(c.id);
     writeSave(fresh);
