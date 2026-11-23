@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { GAME_H, GAME_W } from './config';
 import { available } from './assets';
+import { setupInstallGuide } from './installGuide';
 import { CHARACTERS } from './data/characters';
 import { Music } from './audio/Music';
 import { BootScene } from './scenes/BootScene';
@@ -67,4 +68,6 @@ async function start() {
   });
 }
 
+// phones opening the site get a walkthrough for adding it to the home screen
+setupInstallGuide();
 void start();
