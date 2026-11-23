@@ -7,6 +7,7 @@ export interface SaveData {
   wins: number;
   cleared: number; // how many tour stops are done; the next one is unlocked
   progress: Record<string, CharProgress>; // XP, level and level-up picks per song
+  upgrades: Record<string, number>; // set-list upgrades bought at the merch table (id -> level)
 }
 
 const KEY = 'mb-cover-wars-save-v1';
@@ -17,6 +18,7 @@ const defaults = (): SaveData => ({
   wins: 0,
   cleared: 0,
   progress: {},
+  upgrades: {},
 });
 
 export function loadSave(): SaveData {

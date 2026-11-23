@@ -4,6 +4,7 @@ import type { CharacterDef } from '../data/characters';
 import { txt } from './text';
 import { loadSave } from '../save';
 import { MAX_LEVEL, boostedStats, xpToNext } from '../data/progress';
+import { upgradedWeapon } from '../data/upgrades';
 
 /** A song on the roster: a playable character, or an album track still to come. */
 export type RosterItem = { c: CharacterDef; soon?: undefined } | { c?: undefined; soon: string };
@@ -84,7 +85,8 @@ export class DetailPanel {
     spr.play(`${c.id}-idle`);
     add(txt(s, x + 58, y + 6, c.name.toUpperCase(), 8).setWordWrapWidth(PANEL_W - 70, true).setLineSpacing(3));
     add(txt(s, x + 58, y + 40, c.archetype, 8, css(COLORS.cyan)));
-    const prog = loadSave().progress[c.id];
+    const save = loadSave();
+    const prog = save.progress[c.id];
     const st = boostedStats(c, prog);
     const lvl = prog?.level ?? 1;
     add(txt(s, x + 58, y + 52, `LV ${lvl}`, 8, css(COLORS.pink)));
@@ -96,7 +98,7 @@ export class DetailPanel {
     let ty = y + 74;
     add(txt(s, x, ty, `HP ${st.hp}  AIM ${st.aim}  MOVE ${c.move}`, 8, prog && (prog.hp || prog.aim) ? css(COLORS.green) : '#c8c0d8')); ty += 16;
     add(txt(s, x, ty, c.weapon.name, 8)); ty += 12;
-    const w = st.weapon;
+    const w = upgradedWeapon(st.weapon, save);
     add(txt(s, x, ty, `DMG ${w.dmg[0]}-${w.dmg[1]}${w.shots > 1 ? ' x' + w.shots : ''}  RANGE ${w.range}`, 8, '#c8c0d8')); ty += 12;
     if (w.close) {
       add(txt(s, x, ty, `${w.close.aim > 0 ? '+' : ''}${w.close.aim} AIM UP CLOSE`, 8, w.close.aim > 0 ? css(COLORS.green) : css(COLORS.red)).setScale(0.75));

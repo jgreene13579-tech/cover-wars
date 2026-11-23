@@ -93,7 +93,8 @@ export class ResultsScene extends Phaser.Scene {
 
     // ---- XP (right)
     txt(this, XP_X, 88, 'EXPERIENCE', 8, css(COLORS.gray));
-    xpRows.forEach((r, i) => this.xpRow(r, 102 + i * 46, 600 + i * 300));
+    const rowH = xpRows.length > 4 ? 34 : 46;
+    xpRows.forEach((r, i) => this.xpRow(r, 102 + i * rowH, 600 + i * 300, rowH - 6));
 
     // ---- buttons: level-up picks come first if anyone leveled
     const go = (key: string, data?: object) => {
@@ -107,21 +108,23 @@ export class ResultsScene extends Phaser.Scene {
   }
 
   /** One band member's XP gain: sprite, name, +XP, and a bar that fills (and rolls over on a level-up). */
-  private xpRow(r: { id: string; gain: number; kills: number; downed: boolean; startLevel: number; startXp: number; levels: number; p: { level: number; xp: number } }, y: number, delay: number) {
+  private xpRow(r: { id: string; gain: number; kills: number; downed: boolean; startLevel: number; startXp: number; levels: number; p: { level: number; xp: number } }, y: number, delay: number, h = 40) {
     const c = getCharacter(r.id);
-    this.add.rectangle(XP_X, y, XP_W, 40, COLORS.panel, 0.85).setOrigin(0).setStrokeStyle(1, COLORS.border);
-    const spr = this.add.sprite(XP_X + 16, y + 36, c.id, 'f0').setOrigin(0.5, 1).setScale(1.5);
+    this.add.rectangle(XP_X, y, XP_W, h, COLORS.panel, 0.85).setOrigin(0).setStrokeStyle(1, COLORS.border);
+    const spr = this.add.sprite(XP_X + 16, y + h - 4, c.id, 'f0').setOrigin(0.5, 1).setScale(h < 40 ? 1.2 : 1.5);
     spr.play(`${c.id}-idle`);
     if (r.downed) spr.setTint(0x8a8098);
-    const name = txt(this, XP_X + 34, y + 5, c.short, 8);
-    if (name.width > 120) name.setScale(120 / name.width);
-    const lvl = txt(this, XP_X + XP_W - 6, y + 5, `LV ${r.startLevel}`, 8, css(COLORS.cyan)).setOrigin(1, 0);
+    const compact = h < 40;
+    const name = txt(this, XP_X + 34, y + (compact ? 3 : 5), c.short, 8);
+    if (compact) name.setScale(0.75);
+    if (name.displayWidth > 120) name.setScale((name.scale * 120) / name.displayWidth);
+    const lvl = txt(this, XP_X + XP_W - 6, y + (compact ? 3 : 5), `LV ${r.startLevel}`, 8, css(COLORS.cyan)).setOrigin(1, 0);
     const why = `+${r.gain} XP${r.kills ? `  ${r.kills} KO` : ''}${r.downed ? '  (DOWNED)' : ''}`;
-    txt(this, XP_X + 34, y + 17, why, 8, css(COLORS.gold)).setScale(0.75);
+    txt(this, XP_X + 34, y + (compact ? 11 : 17), why, 8, css(COLORS.gold)).setScale(0.75);
 
     const barX = XP_X + 34;
     const barW = XP_W - 42;
-    const barY = y + 29;
+    const barY = compact ? y + h - 7 : y + h - 11;
     this.add.rectangle(barX, barY, barW, 5, 0x0b0710).setOrigin(0);
     const fill = this.add.rectangle(barX, barY, 0, 5, COLORS.cyan).setOrigin(0);
     const frac = (level: number, xp: number) => (level >= MAX_LEVEL ? 1 : xp / xpToNext(level));
@@ -139,7 +142,7 @@ export class ResultsScene extends Phaser.Scene {
         if (s.level) this.time.delayedCall(450, () => {
           lvl.setText(`LV ${s.level}`);
           sfx.coin();
-          const up = txt(this, XP_X + XP_W - 6, y + 17, 'LEVEL UP!', 8, css(COLORS.pink)).setOrigin(1, 0).setScale(0.75);
+          const up = txt(this, XP_X + XP_W - 6, y + (compact ? 11 : 17), 'LEVEL UP!', 8, css(COLORS.pink)).setOrigin(1, 0).setScale(0.75);
           this.tweens.add({ targets: up, alpha: 0.4, duration: 400, yoyo: true, repeat: -1 });
         });
       });

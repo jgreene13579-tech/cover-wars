@@ -3,6 +3,7 @@ import { COLORS, GAME_W, css } from '../config';
 import { CHARACTERS } from '../data/characters';
 import { MISSIONS } from '../data/missions';
 import { loadSave, pendingLevelUps } from '../save';
+import { squadSize } from '../data/upgrades';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
 import { DetailPanel, RosterCard, rosterGrid } from '../ui/Roster';
@@ -10,7 +11,6 @@ import { Music } from '../audio/Music';
 import { sfx } from '../audio/Synth';
 import { backdrop } from './backdrop';
 
-const MAX_SQUAD = 4;
 
 /** Pick the set list: which song-characters go on stage. */
 export class SquadScene extends Phaser.Scene {
@@ -23,6 +23,7 @@ export class SquadScene extends Phaser.Scene {
   private mission = 0;
   /** Keep the last set list between shows. */
   static lastSquad: string[] = [];
+  private maxSquad = 4;
 
   constructor() { super('Squad'); }
 
@@ -35,12 +36,13 @@ export class SquadScene extends Phaser.Scene {
     backdrop(this);
     this.mission = data?.mission ?? Math.min(save.cleared, MISSIONS.length - 1);
     this.owned = new Set(save.unlocked);
-    const remembered = SquadScene.lastSquad.filter((id) => this.owned.has(id));
+    this.maxSquad = squadSize(save);
+    const remembered = SquadScene.lastSquad.filter((id) => this.owned.has(id)).slice(0, squadSize(save));
     this.chosen = remembered.length ? remembered
-      : CHARACTERS.filter((c) => this.owned.has(c.id)).slice(0, MAX_SQUAD).map((c) => c.id);
+      : CHARACTERS.filter((c) => this.owned.has(c.id)).slice(0, this.maxSquad).map((c) => c.id);
 
     txt(this, GAME_W / 2, 10, 'PICK YOUR SET LIST', 16, css(COLORS.pink)).setOrigin(0.5, 0);
-    txt(this, GAME_W / 2, 31, `NIGHT ${this.mission + 1}: ${MISSIONS[this.mission].venue}. UP TO 4 SONGS.`, 8, css(COLORS.gray)).setOrigin(0.5, 0);
+    txt(this, GAME_W / 2, 31, `NIGHT ${this.mission + 1}: ${MISSIONS[this.mission].venue}. UP TO ${this.maxSquad} SONGS.`, 8, css(COLORS.gray)).setOrigin(0.5, 0);
 
     this.panel = new DetailPanel(this);
     this.cards = rosterGrid(this, CHARACTERS.map((c) => ({ c })), (it) => !this.owned.has(it.c!.id),
@@ -67,7 +69,7 @@ export class SquadScene extends Phaser.Scene {
     if (!this.owned.has(c.id)) { sfx.miss(); return; }
     const i = this.chosen.indexOf(c.id);
     if (i >= 0) this.chosen.splice(i, 1);
-    else if (this.chosen.length < MAX_SQUAD) this.chosen.push(c.id);
+    else if (this.chosen.length < this.maxSquad) this.chosen.push(c.id);
     else { sfx.miss(); return; }
     sfx.select();
     Music.playCharacter(this, c.id);
@@ -83,7 +85,7 @@ export class SquadScene extends Phaser.Scene {
       if (!this.owned.has(id)) card.status.setText(`${card.item.c!.price}`).setColor(css(COLORS.gray));
       else card.status.setText(n >= 0 ? `#${n + 1}` : '').setColor(css(COLORS.gold));
     }
-    this.countText.setText(`SET LIST ${this.chosen.length}/${MAX_SQUAD}`);
+    this.countText.setText(`SET LIST ${this.chosen.length}/${this.maxSquad}`);
     this.startBtn.setEnabled(this.chosen.length > 0);
   }
 

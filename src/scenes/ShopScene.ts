@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, GAME_W, css } from '../config';
 import { CHARACTERS, COMING_SOON } from '../data/characters';
+import { UPGRADES, UpgradeDef, upgradeLevel } from '../data/upgrades';
 import { loadSave, writeSave } from '../save';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
@@ -9,25 +10,43 @@ import { Music } from '../audio/Music';
 import { sfx } from '../audio/Synth';
 import { backdrop } from './backdrop';
 
-/** Spend coins on new song-characters. Songs without a character yet are "coming soon". */
+type Tab = 'songs' | 'upgrades';
+
+/** Spend coins on new song-characters, or on set-list upgrades for the whole band. */
 export class ShopScene extends Phaser.Scene {
   private panel!: DetailPanel;
   private cards: RosterCard[] = [];
   private buyBtn!: Button;
-  private coinText!: Phaser.GameObjects.Text;
   private current: RosterItem | null = null;
 
   constructor() { super('Shop'); }
 
-  create(data: { show?: string }) {
+  create(data: { show?: string; tab?: Tab }) {
     backdrop(this);
     const save = loadSave();
+    const tab: Tab = data?.tab ?? 'songs';
 
-    txt(this, GAME_W / 2, 10, 'MERCH TABLE', 16, css(COLORS.pink)).setOrigin(0.5, 0);
-    txt(this, GAME_W / 2, 31, 'UNLOCK SONGS FROM BOTH ALBUMS', 8, css(COLORS.gray)).setOrigin(0.5, 0);
+    txt(this, GAME_W / 2, 6, 'MERCH TABLE', 16, css(COLORS.pink)).setOrigin(0.5, 0);
     this.add.image(14, 16, 'coin').setScale(2).setOrigin(0, 0.5);
-    this.coinText = txt(this, 30, 12, `${save.coins}`, 8, css(COLORS.gold));
+    txt(this, 30, 12, `${save.coins}`, 8, css(COLORS.gold));
+    new Button(this, GAME_W - 102, 8, 92, 22, 'BACK', () => this.scene.start('Title'));
 
+    // tabs
+    const songsTab = new Button(this, GAME_W / 2 - 124, 26, 120, 18, 'SONGS', () => tab !== 'songs' && this.scene.restart({ tab: 'songs' }));
+    const upTab = new Button(this, GAME_W / 2 + 4, 26, 120, 18, 'SET LIST UPGRADES', () => tab !== 'upgrades' && this.scene.restart({ tab: 'upgrades' }));
+    (tab === 'songs' ? songsTab : upTab).setActive2(true);
+
+    new Button(this, GAME_W / 2 - 90, 318, 180, 28, 'PICK SET LIST', () => this.scene.start('Squad'), { fill: 0x5a1838, border: COLORS.pink });
+
+    if (tab === 'upgrades') this.buildUpgrades();
+    else this.buildSongs(data?.show);
+    Music.menu(this);
+  }
+
+  // ---------------------------------------------------------------- songs
+
+  private buildSongs(show?: string) {
+    const save = loadSave();
     const items: RosterItem[] = [...CHARACTERS.map((c) => ({ c })), ...COMING_SOON.map((s) => ({ soon: s }))];
     this.panel = new DetailPanel(this);
     this.cards = rosterGrid(this, items, (it) => !!it.c && !save.unlocked.includes(it.c.id), (card) => {
@@ -40,19 +59,13 @@ export class ShopScene extends Phaser.Scene {
       if (save.unlocked.includes(c.id)) card.status.setText('OWNED').setColor(css(COLORS.green));
       else card.status.setText(`${c.price}`).setColor(css(save.coins >= c.price ? COLORS.gold : COLORS.gray));
     }
-
     this.buyBtn = new Button(this, PANEL_X + 12, GRID_Y + PANEL_H - 30, PANEL_W - 24, 22, 'BUY', () => this.buy(),
       { fill: 0x5a1838, border: COLORS.gold });
-
-    new Button(this, GAME_W - 102, 8, 92, 22, 'BACK', () => this.scene.start('Title'));
-    new Button(this, GAME_W / 2 - 90, 318, 180, 28, 'PICK SET LIST', () => this.scene.start('Squad'), { fill: 0x5a1838, border: COLORS.pink });
-
     // open on the requested song, else the cheapest one still locked
-    const start = (data?.show ? items.find((it) => it.c?.id === data.show) : undefined)
+    const start = (show ? items.find((it) => it.c?.id === show) : undefined)
       ?? items.filter((it) => it.c && !save.unlocked.includes(it.c.id)).sort((a, b) => a.c!.price - b.c!.price)[0]
       ?? items[0];
     this.select(start);
-    Music.menu(this);
   }
 
   private select(item: RosterItem) {
@@ -83,5 +96,56 @@ export class ShopScene extends Phaser.Scene {
     sfx.buy();
     Music.playCharacter(this, c.id);
     this.scene.restart({ show: c.id });
+  }
+
+  // ---------------------------------------------------------------- upgrades
+
+  private buildUpgrades() {
+    const save = loadSave();
+    const x = 10;
+    const w = GAME_W - 20;
+    const rowH = 42;
+    UPGRADES.forEach((u, i) => {
+      const y = 50 + i * (rowH + 2);
+      const lvl = upgradeLevel(save, u.id);
+      const max = u.prices.length;
+      const locked = !!u.requires && upgradeLevel(save, u.requires) === 0;
+      const maxed = lvl >= max;
+      const price = maxed ? 0 : u.prices[lvl];
+      const top = u.id === 'ap';
+      this.add.rectangle(x, y, w, rowH, top ? 0x2a1438 : COLORS.panel, 0.95).setOrigin(0)
+        .setStrokeStyle(2, maxed ? COLORS.green : top ? COLORS.gold : COLORS.border);
+      txt(this, x + 10, y + 7, u.name, 8, maxed ? css(COLORS.green) : top ? css(COLORS.gold) : '#ffffff');
+      // level pips
+      for (let k = 0; k < max; k++) {
+        this.add.rectangle(x + 150 + k * 12, y + 7, 9, 8, k < lvl ? COLORS.cyan : 0x0b0710).setOrigin(0).setStrokeStyle(1, COLORS.border);
+      }
+      const desc = txt(this, x + 10, y + 22, locked ? `NEEDS ${this.nameOf(u.requires!)} FIRST. ${u.desc}` : u.desc, 8, css(COLORS.gray)).setScale(0.75);
+      const room = w - 180;
+      if (desc.displayWidth > room) desc.setScale((0.75 * room) / desc.displayWidth);
+
+      const label = maxed ? 'OWNED' : locked ? 'LOCKED' : `${max > 1 ? `LV ${lvl + 1}: ` : ''}${price}`;
+      const can = !maxed && !locked && save.coins >= price;
+      const b = new Button(this, x + w - 160, y + 9, 150, 24, label, () => this.buyUpgrade(u),
+        maxed ? {} : { fill: 0x5a1838, border: COLORS.gold });
+      b.setEnabled(can);
+    });
+  }
+
+  private nameOf(id: string) { return UPGRADES.find((u) => u.id === id)?.name ?? id; }
+
+  private buyUpgrade(u: UpgradeDef) {
+    const fresh = loadSave();
+    const lvl = upgradeLevel(fresh, u.id);
+    if (lvl >= u.prices.length) return;
+    if (u.requires && upgradeLevel(fresh, u.requires) === 0) return;
+    const price = u.prices[lvl];
+    if (fresh.coins < price) return;
+    fresh.coins -= price;
+    fresh.upgrades[u.id] = lvl + 1;
+    writeSave(fresh);
+    sfx.buy();
+    this.cameras.main.flash(150, 255, 211, 79);
+    this.scene.restart({ tab: 'upgrades' });
   }
 }

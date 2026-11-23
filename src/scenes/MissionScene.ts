@@ -12,6 +12,7 @@ import { NPCS } from '../data/npcs';
 import { ENEMY_INTROS } from '../data/intros';
 import { loadSave, loadSeen, markSeen } from '../save';
 import { boostedStats, enemyVeterancy } from '../data/progress';
+import { actionsPerTurn, upgradedWeapon } from '../data/upgrades';
 import { THEMES, Theme, buildVenue, venueTile } from '../art/venues';
 import { Hud, HudState } from '../ui/Hud';
 import { txt } from '../ui/text';
@@ -90,6 +91,7 @@ export class MissionScene extends Phaser.Scene {
   touchPreview: string | null = null;
   kills = 0;
   killsBy: Record<string, number> = {}; // knockouts per band member, for XP
+  baseAp = 2; // actions per turn (3 with the Extra Action upgrade)
   squad: string[] = [];
   missionIndex = 0;
   mission!: MissionDef;
@@ -193,6 +195,7 @@ export class MissionScene extends Phaser.Scene {
     const spawns: Pos[] = [];
     const vet = enemyVeterancy(this.missionIndex);
     const save = loadSave();
+    this.baseAp = actionsPerTurn(save);
     rows.forEach((r, y) => [...r].forEach((ch, x) => {
       if (ch === 'P') spawns.push({ x, y });
       const eid = ENEMY_CHARS[ch];
@@ -210,7 +213,7 @@ export class MissionScene extends Phaser.Scene {
       const st = boostedStats(c, save.progress[id]);
       this.units.push(new Unit(this, this.world, {
         id: c.id, team: 'player', name: c.short, archetype: c.archetype,
-        hp: st.hp, aim: st.aim, move: c.move, weapon: st.weapon, special: c.special,
+        hp: st.hp, aim: st.aim, move: c.move, weapon: upgradedWeapon(st.weapon, save), special: c.special,
         tex: c.id, x: spawns[i].x, y: spawns[i].y, idleFx: c.idleFx,
       }));
     });
@@ -1789,7 +1792,7 @@ export class MissionScene extends Phaser.Scene {
     if (!first) this.turn++;
     this.popDecoys();
     for (const p of this.players()) {
-      p.ap = p.controlledBy ? 0 : 2; // checked-in members sit this turn out
+      p.ap = p.controlledBy ? 0 : this.baseAp; // checked-in members sit this turn out
       p.overwatch = false;
       p.taunting = false;
       p.serial = false;
