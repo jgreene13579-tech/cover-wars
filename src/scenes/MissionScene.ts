@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { COLORS, HUD_Y, TILE, WS, css } from '../config';
 import { Grid, Pos, ReachNode, dist, key } from '../tactics/Grid';
 import { Unit, tileToWorld } from '../tactics/Unit';
-import { BARRICADE_DEF, BRACE_AIM, ShotMods, canTarget, hitChance, rollDamage } from '../tactics/Combat';
+import { BARRICADE_DEF, BRACE_AIM, ShotMods, canTarget, hitChance, rollDamage, MARK_AIM } from '../tactics/Combat';
 import { TAUNT_RANGE, planEnemy } from '../tactics/EnemyAI';
 import { getCharacter } from '../data/characters';
 import { gunBlurb } from '../data/weapons';
@@ -23,32 +23,33 @@ type Mode = 'idle' | 'shoot' | 'special';
 interface Pending { kind: 'shoot' | 'special'; target?: Unit; tile?: Pos }
 interface AttackOpts extends ShotMods { dmgBonus?: number; critOnFlank?: boolean; leaf?: boolean; noCrit?: boolean }
 
-const GRENADE_RANGE = 6;
-const ROCKET_RANGE = 9;
+const GRENADE_RANGE = 7;
+const ROCKET_RANGE = 10;
 const ROCKET_DMG = 4;
 const GRENADE_DMG = 3;
 const FAN_RANGE = 7;
-const FAN_SHOTS = 6;
+const FAN_SHOTS = 7;
 const FAN_AIM = -10;
 const CHARGE_RANGE = 5;
 const CHARGE_DMG = 5;
 const MARK_RANGE = 14;
-const FLAME_RANGE = 4;
+const FLAME_RANGE = 5;
 const FLAME_DMG = 2;
 const FLAME_BURN = 2;
 const FLAME_ANGLE = 0.62; // half-width of the cone, radians
 const CHAIN_DMG = 3;
 const CHAIN_JUMP_DMG = 2;
-const CHAIN_JUMPS = 2;
+const CHAIN_JUMPS = 3;
 const CHAIN_JUMP_RANGE = 3.5;
-const OW_AIM = -10;
-const HEAL_RANGE = 4;
+const OW_AIM = 0; // No Running fires at full aim
+const HEAL_RANGE = 5;
 const FULL_HEAL = true; // You Can Breathe restores everyone to full HP
 const BLINK_RANGE = 6;
 const SERIAL_CUT = 1; // damage Pen & Paper gives up per shot while Bleed You Dry is on
-const DECOY_RANGE = 6;
-const DEPLOY_RANGE = 4; // how far Indy Blvd can throw his barricade // how far Distraction can throw his fake
+const DECOY_RANGE = 7;
+const DEPLOY_RANGE = 5; // how far Indy Blvd can throw his barricade
 const BLINK_AIM = 15;
+const AIMED_AIM = 35; // Sweet Sweet November's Last Leaf Falls
 type TutEvent = 'start' | 'select' | 'move' | 'aim' | 'shoot' | 'special' | 'end' | 'hurt' | 'kill' | 'turn2';
 /** The Eagles Lodge lesson, one step at a time: each tip shows once the step before it happens. */
 const TUTORIAL: { on: TutEvent; text: string }[] = [
@@ -67,13 +68,13 @@ const TUT_ONCE: Partial<Record<TutEvent, string>> = {
 };
 const HYPNO_TINT = 0xc77dff;
 const TAUNT_ARMOR = 1; // damage Toast shrugs off per hit while taunting
-const AMBUSH_DMG = 2; // ESYNH's shot out of stealth
+const AMBUSH_DMG = 3; // ESYNH's shot out of stealth
 const TILE_SPECIALS = new Set(['grenade', 'rocket', 'flame', 'blink', 'decoy', 'deploy']);
 const TARGET_SPECIALS = new Set(['aimedShot', 'chain', 'charge', 'axe', 'grapple']);
 const MELEE_SPECIALS = new Set(['charge', 'axe']);
-const AXE_RANGE = 4;
+const AXE_RANGE = 5;
 const GRAPPLE_RANGE = 7; // Been Here Before's hook
-const GRAPPLE_DMG = 4;
+const GRAPPLE_DMG = 5;
 const AXE_DMG = 6;
 const CLAP_DMG = 2;
 const ACTIVATE_RANGE = 10;
@@ -436,7 +437,7 @@ export class MissionScene extends Phaser.Scene {
     this.mode = 'special';
     switch (u.special.kind) {
       case 'grenade': case 'rocket': case 'flame': case 'blink': case 'decoy': case 'deploy': this.pending = null; break;
-      case 'aimedShot': this.pending = { kind: 'special', target: this.bestTarget(u, { aimBonus: 30, ignoreHalf: true }) }; break;
+      case 'aimedShot': this.pending = { kind: 'special', target: this.bestTarget(u, { aimBonus: AIMED_AIM, ignoreHalf: true }) }; break;
       case 'chain': this.pending = { kind: 'special', target: this.bestTarget(u) }; break;
       case 'grapple': {
         const opts = this.enemies().filter((e) => this.grapplePlan(u, e)).sort((a, b) => dist(u, a) - dist(u, b));
@@ -864,7 +865,7 @@ export class MissionScene extends Phaser.Scene {
       case 'aimedShot': {
         const t = this.pending?.target;
         if (!t) return { info: ['NO TARGET', 'IN SIGHT.'], confirm: null };
-        return { info: this.shotLines(u, t, { aimBonus: 30, ignoreHalf: true }, 1, true), confirm: 'TAKE SHOT' };
+        return { info: this.shotLines(u, t, { aimBonus: AIMED_AIM, ignoreHalf: true }, 1, true), confirm: 'TAKE SHOT' };
       }
       case 'stealth':
         return { info: ['VANISH: 1 ACTION,', 'THEN MOVE IN.', 'AMBUSH SHOT: CRIT', `+${AMBUSH_DMG} DMG.`], confirm: 'GO UNHEARD' };
@@ -888,7 +889,7 @@ export class MissionScene extends Phaser.Scene {
       case 'mark': {
         const n = this.targetsFor(u, MARK_RANGE).length;
         if (!n) return { info: ['NO ENEMIES', 'IN SIGHT.'], confirm: null };
-        return { info: [`MARKS ${n} ENEM${n > 1 ? 'IES' : 'Y'}`, '+20 AIM FOR SQUAD', 'UNTIL NEXT TURN.', 'USES 1 ACTION.'], confirm: 'MARK' };
+        return { info: [`MARKS ${n} ENEM${n > 1 ? 'IES' : 'Y'}`, `+${MARK_AIM} AIM FOR SQUAD`, 'UNTIL NEXT TURN.', 'USES 1 ACTION.'], confirm: 'MARK' };
       }
       case 'flame': {
         const t = this.pending?.tile;
@@ -1037,7 +1038,7 @@ export class MissionScene extends Phaser.Scene {
         case 'grenade': await this.fragOut(u, p.tile!); break;
         case 'rocket': await this.fireRocket(u, p.tile!); break;
         case 'fanfire': await this.signHere(u); break;
-        case 'aimedShot': await this.attack(u, p.target!, { aimBonus: 30, ignoreHalf: true, dmgBonus: 1, critOnFlank: true, leaf: true }); break;
+        case 'aimedShot': await this.attack(u, p.target!, { aimBonus: AIMED_AIM, ignoreHalf: true, dmgBonus: 1, critOnFlank: true, leaf: true }); break;
         case 'stealth': await this.goUnheard(u); break;
         case 'charge': await this.wreckingBall(u, p.target!); break;
         case 'mark': await this.secondSight(u); break;

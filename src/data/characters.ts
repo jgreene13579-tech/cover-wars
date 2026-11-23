@@ -78,7 +78,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'grenade',
       name: 'FRAG OUT',
-      desc: 'Lobs a grenade up to 6 tiles, over cover: 3x3 blast, 3 damage, blows up cover.',
+      desc: 'Lobs a grenade up to 7 tiles, over cover: 3x3 blast, 3 damage, blows up cover.',
       cooldown: 3,
     },
     price: 0, startsUnlocked: true, music: 'ice.mp3', idleFx: null,
@@ -116,7 +116,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'fanfire',
       name: 'SIGN HERE',
-      desc: '6 rapid-fire shots split across every enemy in range.',
+      desc: '7 rapid-fire shots split across every enemy in range.',
       cooldown: 3,
     },
     price: 0, startsUnlocked: true, music: 'dotted-line.mp3', idleFx: null,
@@ -153,7 +153,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'aimedShot',
       name: 'LAST LEAF FALLS',
-      desc: '+30 aim, ignores half cover. Always crits on a flank.',
+      desc: '+35 aim and +1 damage, ignores half cover. Always crits on a flank.',
       cooldown: 3,
     },
     price: 0, startsUnlocked: true, music: 'sweet-november.mp3', idleFx: 'leaf',
@@ -189,7 +189,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'stealth',
       name: "NOBODY'S LISTENING",
-      desc: 'Costs 1 action: vanish, then move in. Untargetable until after his next turn. Ambush shot always crits, +2 dmg.',
+      desc: 'Costs 1 action: vanish, then move in. Untargetable until after his next turn. Ambush shot always crits, +3 dmg.',
       cooldown: 3,
       freeAction: true,
     },
@@ -229,7 +229,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'rocket',
       name: 'ROCKET LAUNCHER',
-      desc: 'Needs a clear shot, range 9: 3x3 blast, 4 damage, blows up cover.',
+      desc: 'Needs a clear shot, range 10: 3x3 blast, 4 damage, blows up cover.',
       cooldown: 3,
     },
     price: 250, startsUnlocked: false, music: 'wreck.mp3', idleFx: null,
@@ -266,7 +266,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'mark',
       name: 'SECOND SIGHT',
-      desc: 'Marks every enemy he can see: squad gets +20 aim on them. Uses 1 action.',
+      desc: 'Marks every enemy he can see: squad gets +25 aim on them. Uses 1 action.',
       cooldown: 3,
       freeAction: true,
     },
@@ -303,7 +303,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'flame',
       name: "WHAT'S NOT FREE",
-      desc: 'Flame cone: 2 damage, sets targets burning and torches cover. Watch your friends.',
+      desc: 'Flame cone, range 5: 2 damage, sets targets burning and torches cover. Watch your friends.',
       cooldown: 3,
     },
     price: 200, startsUnlocked: false, music: 'fire-sale.mp3', idleFx: 'ember',
@@ -339,7 +339,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'chain',
       name: 'LIGHTNING BOLT TO THE SOUL',
-      desc: 'Lightning never misses: 3 damage, then jumps to 2 more enemies nearby for 2.',
+      desc: 'Lightning never misses: 3 damage, then jumps to 3 more enemies nearby for 2.',
       cooldown: 3,
     },
     price: 250, startsUnlocked: false, music: 'electric-ones.mp3', idleFx: 'spark',
@@ -375,7 +375,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'overwatch',
       name: 'THEY WAIT FOR ME',
-      desc: 'Overwatch: shoots the first enemy that moves where he can see it. No cooldown.',
+      desc: 'Overwatch: shoots the first enemy that moves where he can see it, at full aim. No cooldown.',
       cooldown: 0,
     },
     price: 200, startsUnlocked: false, music: 'no-running.mp3', idleFx: null,
@@ -415,7 +415,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'heal',
       name: 'YOU CAN BREATHE',
-      desc: 'Fully heals himself and every bandmate within 4 tiles, puts out fire, and frees anyone checked in by Hotel California.',
+      desc: 'Fully heals himself and every bandmate within 5 tiles, puts out fire, and frees anyone checked in by Hotel California.',
       cooldown: 3,
     },
     price: 400, startsUnlocked: false, music: 'mindfully-blind.mp3', idleFx: null,
@@ -452,7 +452,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'axe',
       name: 'SHATTER',
-      desc: 'Runs up to an enemy within 4 tiles and swings his axe: 6 damage, never misses. A knockout gives him an action back.',
+      desc: 'Runs up to an enemy within 5 tiles and swings his axe: 6 damage, never misses. A knockout gives him an action back.',
       cooldown: 3,
     },
     price: 300, startsUnlocked: false, music: 'glass-slipper.mp3', idleFx: 'glint',
@@ -566,7 +566,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'decoy',
       name: 'SMOKE AND MIRRORS',
-      desc: 'Throws a fake copy of himself onto a tile within 6. Every enemy within 10 tiles of it has to shoot the fake until your next turn, then it vanishes. Costs 1 action.',
+      desc: 'Throws a fake copy of himself onto a tile within 7. Every enemy within 10 tiles of it has to shoot the fake until your next turn, then it vanishes. Costs 1 action.',
       cooldown: 3,
       freeAction: true,
     },
@@ -607,7 +607,7 @@ export const CHARACTERS: CharacterDef[] = [
       kind: 'serial',
       name: 'BLEED YOU DRY',
       desc: 'Free to switch on. For the rest of the turn, every knockout he lands gives him another shot, but each shot does 1 less damage.',
-      cooldown: 4,
+      cooldown: 3,
     },
     price: 350, startsUnlocked: false, music: 'pen-and-paper.mp3', idleFx: null,
     listen: 'https://open.spotify.com/track/410cDWK0EqXv2aYjjBVJA7',
@@ -645,7 +645,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'deploy',
       name: 'DEPLOYABLE COVER',
-      desc: 'Throws a steel barrier onto an open tile within 4. It gives full cover for the rest of the mission, until a blast breaks it. Costs 1 action.',
+      desc: 'Throws a steel barrier onto an open tile within 5. It gives full cover for the rest of the mission, until a blast breaks it. Costs 1 action.',
       cooldown: 3,
       freeAction: true,
     },
@@ -684,7 +684,7 @@ export const CHARACTERS: CharacterDef[] = [
     special: {
       kind: 'grapple',
       name: 'GRAPPLE',
-      desc: 'Fires a hook at an enemy he can see within 7, yanks himself in and hits them for 4, never misses. Free: he keeps both actions.',
+      desc: 'Fires a hook at an enemy he can see within 7, yanks himself in and hits them for 5, never misses. Free: he keeps both actions.',
       cooldown: 3,
     },
     price: 350, startsUnlocked: false, music: 'been-here-before.mp3', idleFx: null,

@@ -15,7 +15,7 @@ export interface ShotMods {
 }
 
 export const COVER_PENALTY = [0, 20, 40];
-export const MARK_AIM = 20;
+export const MARK_AIM = 25;
 /** Indy Blvd's barrier stops more than ordinary cover. */
 export const BARRICADE_DEF = 10;
 /** Aim for a band member who started the turn braced behind a barrier. */

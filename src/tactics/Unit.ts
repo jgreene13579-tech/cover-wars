@@ -32,7 +32,7 @@ export class Unit {
   cooldown = 0;
   stealth = false;
   stealthTurn = 0;
-  marked = false; // Vision's Second Sight: squad gets +20 aim on this unit
+  marked = false; // Vision's Second Sight: squad gets +25 aim on this unit
   burn = 0; // Fire Sale: turns of burning left
   overwatch = false; // No Running: reaction shot during the enemy turn
   taunting = false; // Toast: enemies in range must target him; he fires back
