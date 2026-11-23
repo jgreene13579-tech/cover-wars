@@ -321,7 +321,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     name: 'FREE BIRD',
     tier: 'legend',
     hp: 10, aim: 72, move: 4,
-    weapon: { name: 'ENDLESS SOLO', dmg: [3, 5], range: 13, shots: 1, crit: 15, sfx: 'note' },
+    weapon: { name: 'ENDLESS SOLO', dmg: [3, 4], range: 13, shots: 1, crit: 15, sfx: 'note' },
     teleport: { range: 8, cooldown: 2 },
     taunts: [
       'SOMEBODY IN THE BACK REQUESTED ME. SOMEBODY ALWAYS DOES.',

@@ -62,4 +62,4 @@ export function boostedStats(c: CharacterDef, p: CharProgress | undefined): { hp
 }
 
 /** Deeper into the tour, every cover song is a little sharper and tougher. */
-export const enemyVeterancy = (missionIndex: number) => ({ aim: Math.round(missionIndex * 1.5), hp: Math.floor(missionIndex / 4) });
+export const enemyVeterancy = (missionIndex: number) => ({ aim: Math.floor(missionIndex / 2), hp: Math.floor(missionIndex / 5) });

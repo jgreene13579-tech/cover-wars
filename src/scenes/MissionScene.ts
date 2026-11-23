@@ -1222,7 +1222,7 @@ export class MissionScene extends Phaser.Scene {
     }
     if (target) {
       this.lastShooter = p;
-      await this.attack(p, target, { aimBonus: -10, noCrit: true }); // half-hearted: no crits on friends
+      await this.attack(p, target, { aimBonus: -20, noCrit: true }); // fighting the spell: shaky aim, no crits on friends
       return;
     }
     if (!mates.length) return;
