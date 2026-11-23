@@ -49,13 +49,22 @@ const SERIAL_CUT = 1; // damage Pen & Paper gives up per shot while Bleed You Dr
 const DECOY_RANGE = 6;
 const DEPLOY_RANGE = 4; // how far Indy Blvd can throw his barricade // how far Distraction can throw his fake
 const BLINK_AIM = 15;
-const TUTORIAL: { on: string; text: string }[] = [
-  { on: 'move', text: 'CLICK A BLUE TILE TO MOVE. GOLD TILES ARE A DASH: FARTHER, BUT IT USES BOTH ACTIONS.' },
-  { on: 'shoot', text: 'SHIELDS SHOW COVER: HALF IS -20 AIM, FULL IS -40. CLICK AN ENEMY TO AIM, THEN FIRE.' },
-  { on: 'special', text: 'NICE SHOT! EVERY SONG HAS A SPECIAL. SELECT SOMEONE AND PRESS SPECIAL (OR KEY 2).' },
-  { on: 'end', text: "ATTACKING ENDS THAT SONG'S TURN. WHEN EVERYONE'S DONE, PRESS END TURN." },
-  { on: '', text: 'NOW THE COVERS SHOOT BACK. STAY IN COVER, FLANK THEM, AND KNOCK THEM ALL OUT!' },
+type TutEvent = 'start' | 'select' | 'move' | 'aim' | 'shoot' | 'special' | 'end' | 'hurt' | 'kill' | 'turn2';
+/** The Eagles Lodge lesson, one step at a time: each tip shows once the step before it happens. */
+const TUTORIAL: { on: TutEvent; text: string }[] = [
+  { on: 'start', text: 'YOUR FIRST SONG IS SELECTED (TAB SWITCHES). BLUE TILES COST ONE ACTION, GOLD TILES ARE A DASH THAT USES BOTH. MOVE NEXT TO A TABLE OR CHAIR.' },
+  { on: 'move', text: 'SEE THE SHIELDS? HALF SHIELD = HALF COVER (-20 TO HIT YOU). FULL SHIELD = FULL COVER (-40). NOW CLICK AN ENEMY TO AIM.' },
+  { on: 'aim', text: 'THE PANEL SHOWS HIT %, CRIT % AND DAMAGE. DISTANCE AND COVER LOWER YOUR ODDS. NO COVER = FLANKED = BIG CRITS. PRESS FIRE.' },
+  { on: 'shoot', text: "SHOOTING ENDS THAT SONG'S TURN. SELECT ANOTHER SONG AND TRY ITS SPECIAL (BUTTON OR KEY 2). SPECIALS RECHARGE OVER A FEW TURNS." },
+  { on: 'special', text: 'WHEN EVERYONE IS OUT OF ACTIONS, THE TURN ENDS BY ITSELF. YOU CAN ALSO PRESS END TURN EARLY.' },
+  { on: 'end', text: 'COVER SONGS WAKE UP WHEN THEY SEE YOU, THEN SHOOT BACK. THAT IS WHY YOU STAY IN COVER.' },
 ];
+/** Extra tips that show the first time something happens, whatever step you're on. */
+const TUT_ONCE: Partial<Record<TutEvent, string>> = {
+  hurt: "OUCH. HP BARS SIT OVER EVERYONE'S HEAD. A SONG AT 0 HP IS OUT FOR THE REST OF THE SHOW.",
+  kill: 'KNOCKOUT! KNOCKOUTS AND WINS EARN COINS AND XP. COINS BUY NEW SONGS. LEVEL-UPS RAISE ATTACK, AIM OR HEALTH.',
+  turn2: 'NEW TURN, FRESH ACTIONS. MOVE UP COVER TO COVER, FLANK THE STRAGGLERS AND CLEAR THE STAGE!',
+};
 const HYPNO_TINT = 0xc77dff;
 const TAUNT_ARMOR = 1; // damage Toast shrugs off per hit while taunting
 const AMBUSH_DMG = 2; // ESYNH's shot out of stealth
@@ -97,6 +106,8 @@ export class MissionScene extends Phaser.Scene {
   mission!: MissionDef;
   theme!: Theme;
   tutStep = -1;
+  tutSeen = new Set<string>();
+  tutToken = 0;
   tutText?: Phaser.GameObjects.Text;
   tutBg?: Phaser.GameObjects.Rectangle;
 
@@ -108,6 +119,9 @@ export class MissionScene extends Phaser.Scene {
     this.mission = MISSIONS[this.missionIndex];
     this.theme = THEMES[this.mission.theme];
     this.tutStep = -1;
+    this.tutSeen = new Set();
+    this.tutText = undefined;
+    this.tutBg = undefined;
     this.units = [];
     this.tileImgs = [];
     this.markers = [];
@@ -350,7 +364,7 @@ export class MissionScene extends Phaser.Scene {
     if (clicked && !clicked.isPlayer) {
       if (u && u.ap > 0 && canTarget(this.grid, u, u, clicked)) {
         if (this.mode === 'shoot' && this.pending?.target === clicked) void this.executePending();
-        else { this.mode = 'shoot'; this.pending = { kind: 'shoot', target: clicked }; sfx.click(); this.refresh(); }
+        else { this.mode = 'shoot'; this.pending = { kind: 'shoot', target: clicked }; sfx.click(); this.refresh(); this.tutorial('aim'); }
       } else this.refresh();
       return;
     }
@@ -406,6 +420,7 @@ export class MissionScene extends Phaser.Scene {
     this.mode = 'shoot';
     this.pending = { kind: 'shoot', target: t };
     this.refresh();
+    this.tutorial('aim');
   }
 
   onSpecial() {
@@ -1325,6 +1340,7 @@ export class MissionScene extends Phaser.Scene {
     this.burst(u.chest().x, u.chest().y, u.isPlayer ? [0xff4f4f, 0xffffff] : [0xff4fa3, 0xffd34f, 0xffffff], crit ? 14 : 7, 14);
     if (crit) { sfx.crit(); this.popup(u.chest(), `CRIT -${n}`, css(COLORS.gold)); this.cameras.main.shake(120, 0.004); }
     else { sfx.hit(); this.popup(u.chest(), `-${n}`, css(COLORS.red)); }
+    if (u.isPlayer) this.tutorial('hurt');
     if (u.hp <= 0) this.kill(u);
     else if (u.id === 'encore') this.rhapsodyAct(u);
   }
@@ -1345,7 +1361,7 @@ export class MissionScene extends Phaser.Scene {
     sfx.death();
     this.tweens.add({ targets: u.sprite, angle: u.sprite.flipX ? -90 : 90, alpha: 0.6, y: u.sprite.y + 2, duration: 320, ease: 'Quad.easeIn' });
     this.popup({ x: u.sprite.x, y: u.sprite.y - 22 }, u.isPlayer ? 'DOWN!' : 'K.O.!', u.isPlayer ? css(COLORS.red) : css(COLORS.gold));
-    if (!u.isPlayer) this.kills++;
+    if (!u.isPlayer) { this.kills++; this.tutorial('kill'); }
     if (!u.isPlayer && this.lastShooter?.isPlayer) this.killsBy[this.lastShooter.id] = (this.killsBy[this.lastShooter.id] ?? 0) + 1;
     if (this.selected === u) this.selected = null;
     const killer = this.lastShooter;
@@ -1789,7 +1805,7 @@ export class MissionScene extends Phaser.Scene {
   // ================================================================ turns
 
   startPlayerPhase(first = false) {
-    if (!first) this.turn++;
+    if (!first) { this.turn++; this.tutorial('turn2'); }
     this.popDecoys();
     for (const p of this.players()) {
       p.ap = p.controlledBy ? 0 : this.baseAp; // checked-in members sit this turn out
@@ -2130,24 +2146,32 @@ export class MissionScene extends Phaser.Scene {
   // ================================================================ tutorial (Eagles Lodge)
 
   /** Shows the next tip when the player does what the current tip asks. */
-  tutorial(event: 'start' | 'move' | 'shoot' | 'special' | 'end') {
-    if (!this.mission.tutorial) return;
-    let next = -1;
-    if (event === 'start') next = 0;
-    else {
-      const i = TUTORIAL.findIndex((s, idx) => idx >= this.tutStep && s.on === event);
-      if (i >= 0) next = i + 1;
+  tutorial(event: TutEvent) {
+    if (!this.mission.tutorial || this.phase === 'over') return;
+    let text: string | null = null;
+    let last = false;
+    if (TUT_ONCE[event]) {
+      if (this.tutSeen.has(event)) return;
+      this.tutSeen.add(event);
+      text = TUT_ONCE[event]!;
+      last = true;
+    } else {
+      // the next step of the lesson (jumping ahead if the player already did it)
+      const i = TUTORIAL.findIndex((t, idx) => idx > this.tutStep && t.on === event);
+      if (i < 0) return;
+      this.tutStep = i;
+      text = TUTORIAL[i].text;
+      last = i === TUTORIAL.length - 1;
     }
-    if (next < 0 || next >= TUTORIAL.length || next <= this.tutStep) return;
-    this.tutStep = next;
     if (!this.tutText) {
       this.tutBg = this.add.rectangle(0, 0, 640, 34, 0x0b0710, 0.92).setOrigin(0).setDepth(110).setStrokeStyle(2, COLORS.gold);
       this.tutText = txt(this, 10, 6, '', 8, css(COLORS.gold)).setDepth(111).setWordWrapWidth(620).setLineSpacing(4);
     }
-    this.tutBg!.setVisible(true);
-    this.tutText.setVisible(true).setText(`TIP: ${TUTORIAL[next].text}`);
+    this.tutText.setVisible(true).setText(`EARL: ${text}`);
+    this.tutBg!.setVisible(true).setSize(640, this.tutText.height + 12);
     sfx.select();
-    if (next === TUTORIAL.length - 1) this.time.delayedCall(8000, () => this.tutorialHide());
+    const token = ++this.tutToken;
+    if (last) this.time.delayedCall(9000, () => { if (token === this.tutToken) this.tutorialHide(); });
   }
 
   tutorialHide() {

@@ -53,6 +53,11 @@ export const MISSIONS: MissionDef[] = [
         { who: 'band', text: 'NO PRESSURE, THEN.' },
         { who: 'npc', text: "BUT I NEED TO KNOW YOU'VE GOT WHAT IT TAKES. THREE OF 'EM JUST CLIMBED ON OUR STAGE." },
         { who: 'npc', text: 'COME ON, KID. LET ME SHOW YOU THE ROPES.' },
+        { who: 'npc', text: 'EVERY SONG GETS TWO ACTIONS A TURN. MOVE, SHOOT, OR PLAY ITS SPECIAL. SHOOTING ENDS ITS TURN, SO MOVE FIRST.' },
+        { who: 'npc', text: "GET BEHIND SOMETHING. TABLES AND CHAIRS ARE HALF COVER. THE BAR AND MY PODIUM ARE FULL COVER. THEY'RE HALF AS LIKELY TO HIT YOU THERE." },
+        { who: 'npc', text: "AIM GETS WORSE WITH DISTANCE AND COVER. CATCH 'EM FROM THE SIDE WITH NOTHING IN THE WAY AND YOU'LL LAND A BIG CRIT." },
+        { who: 'band', text: 'MOVE, TAKE COVER, FLANK, SHOOT. GOT IT.' },
+        { who: 'npc', text: "I'LL BE AT THE BAR YELLING TIPS. GO GET 'EM." },
       ],
     },
     map: [
@@ -96,6 +101,15 @@ export const MISSIONS: MissionDef[] = [
     id: 'reef', venue: 'THE REEF', where: 'HOUSE SHOW', theme: 'reef',
     blurb: 'A COLLEGE HOUSE PARTY, THE MORNING AFTER. KEGS, COOLERS, CUPS EVERYWHERE. A DJ ON THE DECK.',
     intro: 'THE COVERS CRASHED THE AFTER-PARTY!',
+    scene: {
+      guest: 'megamix', at: { x: 18, y: 2 }, leaves: false,
+      lines: [
+        { who: 'megamix', text: "OH GOOD, A LIVE BAND. HOLD ON, LET ME TURN MY SPEAKER UP." },
+        { who: 'band', text: "THIS IS A BACKYARD PARTY. NOBODY ASKED FOR A FOUR-HOUR MASHUP." },
+        { who: 'megamix', text: "WHY PLAY ONE SONG WHEN YOU CAN PLAY THE CHORUS OF EIGHT AT ONCE?" },
+        { who: 'band', text: "BECAUSE OURS HAVE BRIDGES. HE'S TOUGH AND HITS HARD UP CLOSE. KEEP YOUR DISTANCE AND FOCUS FIRE." },
+      ],
+    },
     map: [
       '####N####N####N#####',
       'f,,,,,G,,,q,,k,,,,,f',
@@ -112,6 +126,15 @@ export const MISSIONS: MissionDef[] = [
     id: 'bishop', venue: 'THE BISHOP', where: 'ONE-ROOM VENUE', theme: 'bishop',
     blurb: 'ONE BIG ROOM, ONE BIG STAGE. A DJ MEGAMIX IS WORKING THE CROWD.',
     intro: 'PACK THE ROOM. KNOCK OUT THE DJ!',
+    scene: {
+      guest: 'karaoke', at: { x: 15, y: 6 }, leaves: false,
+      lines: [
+        { who: 'karaoke', text: "YOU'RE PLAYING THE BISHOP? CUTE. I SANG HERE LAST FRIDAY. AND THE FRIDAY BEFORE THAT." },
+        { who: 'brightside', text: "AND I'M FAST. I DON'T EVEN NEED MY GUN TO RUIN YOUR NIGHT." },
+        { who: 'band', text: "STRIPED SLEEVES HITS HARD. THE RUNNER PUNCHES THROUGH COVER. DO NOT LET HIM REACH YOU." },
+        { who: 'karaoke', text: "SEE YOU AT THE HIGH NOTE." },
+      ],
+    },
     map: [
       '#####N####N####N####',
       '#BBBBB.......S..sss#',
@@ -128,6 +151,16 @@ export const MISSIONS: MissionDef[] = [
     id: 'hoosier-dome', venue: 'HOOSIER DOME', where: 'MID-SIZE VENUE', theme: 'hoosierdome',
     blurb: 'A REAL VENUE WITH A REAL STAGE, AND SEVEN NATION ARMY WANTS IT.',
     intro: 'BOSS FIGHT: SEVEN NATION ARMY!',
+    scene: {
+      guest: 'boss', at: { x: 17, y: 2 }, leaves: false,
+      lines: [
+        { who: 'boss', text: "WELCOME TO THE DOME. SEVENTY THOUSAND SEATS, AND EVERY ONE OF THEM KNOWS MY RIFF." },
+        { who: 'acoustic', text: "I'LL BE UP IN THE CHEAP SEATS. TAKING MY TIME. AIMING WITH IT." },
+        { who: 'wonderwall', text: "AND I BROUGHT THE ACOUSTIC. EVERYONE NEAR ME PLAYS A LITTLE BETTER." },
+        { who: 'band', text: "THE BIG ONE'S CHANT IS A SHOCKWAVE, SO DON'T BUNCH UP. TAKE OUT THE GUITAR GUY FIRST." },
+        { who: 'boss', text: "LET ME HEAR YOU, STADIUM!" },
+      ],
+    },
     map: [
       '###N######N######N##',
       '#..cc......B.E..sss#',
@@ -144,6 +177,15 @@ export const MISSIONS: MissionDef[] = [
     id: 'bum-fights', venue: 'BUM FIGHTS', where: 'GYMNASIUM', theme: 'bumfights',
     blurb: 'A GYMNASIUM WITH A FIGHTING RING IN THE MIDDLE. DO NOT ASK QUESTIONS.',
     intro: 'TWO DJS IN THE RING. RING THE BELL!',
+    scene: {
+      guest: 'prayer', at: { x: 17, y: 4 }, leaves: false,
+      lines: [
+        { who: 'prayer', text: "IN THIS CORNER: TWO DJS, A RUNNER, AND ME. I KEEP THEM ALL STANDING." },
+        { who: 'band', text: "WAIT. COVERS HAVE MEDICS NOW?" },
+        { who: 'prayer', text: "EVERY BAR IN AMERICA SINGS ME AT LAST CALL. NOBODY STAYS DOWN ON MY WATCH." },
+        { who: 'band', text: "THEN YOU GO DOWN FIRST." },
+      ],
+    },
     map: [
       '####N#####N#####N###',
       '#.LLLL......Dr.LLLL#',
@@ -160,6 +202,16 @@ export const MISSIONS: MissionDef[] = [
     id: 'healer', venue: 'HEALER', where: '???', theme: 'healer',
     blurb: 'NOTHING IN HERE IS REAL. THE MUSHROOMS ARE BIG ENOUGH TO HIDE BEHIND.',
     intro: 'THE WALLS ARE BREATHING. KEEP PLAYING.',
+    scene: {
+      guest: 'hotel', at: { x: 13, y: 5 }, leaves: false,
+      lines: [
+        { who: 'hotel', text: "WELCOME. YOUR ROOM IS READY. IT HAS ALWAYS BEEN READY." },
+        { who: 'band', text: "IS THE FLOOR... BREATHING?" },
+        { who: 'hotel', text: "STAY AS LONG AS YOU LIKE. ACTUALLY, STAY FOREVER. I INSIST." },
+        { who: 'freebird', text: "AND RIGHT WHEN YOU GET COMFORTABLE, I'LL BE BEHIND YOU. WITH A VERY LONG SOLO." },
+        { who: 'band', text: "IF HE TAKES ONE OF US, HIT HIM TO BREAK THE SPELL. AND WATCH YOUR BACKS FOR THE BIRD." },
+      ],
+    },
     map: [
       '##N####N####N####N##',
       '#...h......,,,.E.sU#',
@@ -176,6 +228,15 @@ export const MISSIONS: MissionDef[] = [
     id: 'bluebird', venue: 'THE BLUEBIRD', where: 'CLASSY DIVE BAR', theme: 'bluebird',
     blurb: 'A DIVE BAR THAT OWNS ONE NICE SHIRT. CHECKERED FLOOR, BOOTHS, NO MERCY.',
     intro: 'ACOUSTIC SNIPERS IN THE BOOTHS. WATCH THE ANGLES.',
+    scene: {
+      guest: 'acoustic', at: { x: 17, y: 2 }, leaves: false,
+      lines: [
+        { who: 'acoustic', text: "QUIET, PLEASE. THIS IS A LISTENING ROOM." },
+        { who: 'band', text: "WE'RE A ROCK BAND." },
+        { who: 'acoustic', text: "THEN YOU'LL BE VERY EASY TO HEAR. AND VERY EASY TO HIT." },
+        { who: 'band', text: "SNIPERS IN THE BOOTHS. FLANK THEM. DON'T TRADE SHOTS ACROSS THE ROOM." },
+      ],
+    },
     map: [
       '####N#####N#####N###',
       '#BBBBBBBB.....K.sss#',
@@ -192,6 +253,16 @@ export const MISSIONS: MissionDef[] = [
     id: 'kilroys', venue: "KILROY'S SPORTS", where: 'COLLEGE SPORTS BAR', theme: 'kilroys',
     blurb: 'EVERY TV IS ON. SO IS SEVEN NATION ARMY, AND HE BROUGHT FRIENDS.',
     intro: 'GAME DAY. THE STADIUM CHANT IS BACK!',
+    scene: {
+      guest: 'earl', at: { x: 2, y: 3 }, leaves: true,
+      lines: [
+        { who: 'npc', text: "KID! I DROVE ALL THE WAY OUT HERE. THE WHOLE LODGE IS WATCHING ON THE BIG SCREEN." },
+        { who: 'band', text: "EARL? AT A SPORTS BAR?" },
+        { who: 'npc', text: "THAT STADIUM CHANT IS BACK, AND HE BROUGHT HIS WHOLE TEAM. WIN THIS ONE AND IT'S THE PARK. HOMETOWN SHOW." },
+        { who: 'boss', text: "GAME DAY! YOU CAN'T OUT-CHANT A STADIUM. YOU DEFINITELY CAN'T OUT-CHANT A SPORTS BAR." },
+        { who: 'npc', text: "DON'T LISTEN TO HIM. GO GET 'EM. I'LL BE AT THE BAR." },
+      ],
+    },
     map: [
       '##N###N###N###N###N#',
       '#RRR.........T.E.RR#',
@@ -208,6 +279,16 @@ export const MISSIONS: MissionDef[] = [
     id: 'central-park', venue: 'CENTRAL PARK PLAZA', where: 'VALPARAISO, IN', theme: 'park',
     blurb: 'THE HOMETOWN HEADLINER. BOHEMIAN RHAPSODY HAS TAKEN THE AMPHITHEATER.',
     intro: 'FINAL SHOW: TAKE BACK THE AMPHITHEATER!',
+    scene: {
+      guest: 'encore', at: { x: 18, y: 2 }, leaves: false,
+      lines: [
+        { who: 'encore', text: "SO. THE LITTLE ORIGINAL BAND MADE IT HOME." },
+        { who: 'encore', text: "I AM SIX MINUTES LONG. I HAVE NO CHORUS. AND STILL, EVERY CROWD ON EARTH KNOWS EVERY PART OF ME." },
+        { who: 'band', text: "WE KNOW. WE'VE HEARD YOU AT EVERY WEDDING WE'VE EVER PLAYED." },
+        { who: 'encore', text: "THEN YOU KNOW HOW THIS GOES. FIRST A BALLAD. THEN AN OPERA. THEN WE ROCK." },
+        { who: 'band', text: "AND THEN WE PLAY OUR SET. IN OUR TOWN." },
+      ],
+    },
     map: [
       'OO#N###N#OO#N###N#OO',
       '....,,,,,,,.YO.Mssss',

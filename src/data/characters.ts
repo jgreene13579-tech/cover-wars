@@ -41,6 +41,8 @@ export interface CharacterDef {
   price: number;
   startsUnlocked: boolean;
   music: string; // file name in public/assets/music/
+  /** Where to hear the real song (Spotify track, or its album when the track link isn't known). */
+  listen?: string;
   idleFx: IdleFx;
   /** Said every time this song knocks out a cover (instead of the band's random comebacks). */
   killLines?: string[];
@@ -80,6 +82,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 0, startsUnlocked: true, music: 'ice.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/54HW8tCuL5iq0MSd9NcaSX',
     // SWAT, all black tactical: ballistic helmet, shades, stubble, black plate carrier with a
     // white ID strip and gray pouches, radio, gloves, black pants and boots.
     palette: {
@@ -118,6 +121,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 0, startsUnlocked: true, music: 'dotted-line.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/album/037NQyJRcHNCdKs6jjImnf',
     killLines: ['CAME HERE TO DO WHAT I DO THE BEST.'],
     palette: {
       H: 0x1b1622, h: 0x4a3e5c, s: 0xd9a27a, e: 0x1a1020, m: 0x8a3b3b,
@@ -155,6 +159,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 0, startsUnlocked: true, music: 'sweet-november.mp3', idleFx: 'leaf',
+    listen: 'https://open.spotify.com/album/037NQyJRcHNCdKs6jjImnf',
     palette: {
       R: 0xc8202e, r: 0x8a1420, h: 0x8a3a1f, s: 0xf3c9a6, e: 0x1a1020, m: 0xa04a4a,
       O: 0xff9a2e, C: 0x6b4a32, c: 0x4a3222, g: 0x7a7f8f, G: 0x3d404c, p: 0x4a3222, k: 0x1e1612,
@@ -191,6 +196,7 @@ export const CHARACTERS: CharacterDef[] = [
       freeAction: true,
     },
     price: 150, startsUnlocked: false, music: 'every-song-youve-never-heard.mp3', idleFx: 'sigh',
+    listen: 'https://open.spotify.com/album/037NQyJRcHNCdKs6jjImnf',
     killLines: ['YOUR LIFE GOES DOWN THE DRAIN.'],
     palette: {
       K: 0x141018, s: 0xf4e6ee, e: 0x5a1050, D: 0x24202c, d: 0x3e3850,
@@ -229,6 +235,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 250, startsUnlocked: false, music: 'wreck.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/19lgpNuwAltmWAqdF76fh3',
     specialLines: ['THAT IS BEAUTIFUL TO ME.'],
     palette: {
       Y: 0xffc83a, y: 0xc98a1a, s: 0xc98a64, e: 0x1a1020, m: 0x7a3a2a, b: 0x4a2e1c,
@@ -266,6 +273,7 @@ export const CHARACTERS: CharacterDef[] = [
       freeAction: true,
     },
     price: 150, startsUnlocked: false, music: 'vision.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/1fM9E1tqlZeoG0FJsQt4of',
     palette: {
       H: 0x6a3a1a, s: 0xe8b890, V: 0x2a2a3a, c: 0x4fe3ff, m: 0x9a4a4a,
       J: 0x3f6b3a, j: 0x2a4a28, g: 0x9aa3b5, G: 0x4a5060, p: 0x3a3a2a, k: 0x1a1612,
@@ -301,6 +309,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 200, startsUnlocked: false, music: 'fire-sale.mp3', idleFx: 'ember',
+    listen: 'https://open.spotify.com/track/03XSfqsjmuHxxN6jgXdtqE',
     palette: {
       F: 0xa8381e, f: 0xd8602a, s: 0xe8b08a, e: 0x1a1020, m: 0xa04a4a,
       R: 0xd8344a, r: 0x8a1a2a, w: 0xf2f2f2, t: 0x1a1020, Y: 0xffd34f,
@@ -337,6 +346,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 250, startsUnlocked: false, music: 'electric-ones.mp3', idleFx: 'spark',
+    listen: 'https://open.spotify.com/album/28gjbH2mmcgsTyNLAm7ar2',
     palette: {
       Z: 0xe8d27a, z: 0xfff4c0, s: 0xd9a27a, C: 0x4fe3ff, m: 0x7a2a4a,
       U: 0x5a2a9a, c: 0xb8bcc8, p: 0x2a1a4a, k: 0x0f0d14,
@@ -372,6 +382,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 0,
     },
     price: 200, startsUnlocked: false, music: 'no-running.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/3kFkTad9WUvw3ZRLSB0t9E',
     specialLines: ['WE NEED EACH OTHER NOW.'],
     specialLineChance: 0.5,
     // Night watchman: charcoal beanie, stubble, dark green jacket with the hood bunched at the
@@ -412,6 +423,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 400, startsUnlocked: false, music: 'mindfully-blind.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/1VqZrhzltXZaAfllYR1OiK',
     mindControlImmune: true, // blindfolded: Hotel California can't check him in
     palette: {
       L: 0xd8d8e8, s: 0xe8c0a0, B: 0x1a1020, P: 0xff4fa3, m: 0x9a4a5a,
@@ -448,6 +460,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 300, startsUnlocked: false, music: 'glass-slipper.mp3', idleFx: 'glint',
+    listen: 'https://open.spotify.com/album/28gjbH2mmcgsTyNLAm7ar2',
     dashLines: ['BETTER WATCH MY SPEED.'],
     palette: {
       s: 0xe0a47a, S: 0xfff0e0, e: 0x1a1020, m: 0x8a3a3a, b: 0x5a3418,
@@ -484,6 +497,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 4,
     },
     price: 350, startsUnlocked: false, music: 'crown.mp3', idleFx: 'smoke',
+    listen: 'https://open.spotify.com/album/28gjbH2mmcgsTyNLAm7ar2',
     // Officer: peaked cap with a gold badge, black visor, mustache, cigar, navy dress uniform
     // with gold epaulettes, red medals and gold buttons, gold sidearm.
     palette: {
@@ -522,6 +536,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 250, startsUnlocked: false, music: 'toast.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/3HgvgQgolSjOKbZrlSoUep',
     killLines: ['PENNILESS FOOL.', "I WON'T SAY I'M SORRY."],
     // Beefy tactical operator who kept the mullet: headset, beard, heavy gray shoulder armor,
     // coyote-tan plate carrier with pouches and an orange patch, black gloves, dark tac pants.
@@ -562,6 +577,7 @@ export const CHARACTERS: CharacterDef[] = [
       freeAction: true,
     },
     price: 300, startsUnlocked: false, music: 'distraction.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/4h3dx8UDbLfxr1HAEaVPH5',
     dashLines: ['LOOK, A BIRD!', 'WHAT WERE WE TALKING ABOUT?'],
     // Hype guy: big blue foam finger held high, spiky hair, black shades, huge grin,
     // neon green tracksuit with white stripes, white sneakers.
@@ -601,6 +617,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 4,
     },
     price: 350, startsUnlocked: false, music: 'pen-and-paper.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/410cDWK0EqXv2aYjjBVJA7',
     chainLines: ["LISTEN CLOSE AND I'LL TELL ANOTHER SECRET."],
     // Spec ops: ranger-green helmet with flipped-down quad night-vision goggles (green glow),
     // dark face gaiter, plate carrier with pouches and a blue pen in the chest pocket.
@@ -641,6 +658,7 @@ export const CHARACTERS: CharacterDef[] = [
       freeAction: true,
     },
     price: 300, startsUnlocked: false, music: 'indy-blvd.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/1Wu1y72hcBgZDZ8fXRRYu5',
     // Flak suit: olive bomb-squad helmet with a dark blast visor, high padded collar,
     // bulky quilted olive-tan suit with an orange patch, dark gloves.
     palette: {
@@ -678,6 +696,7 @@ export const CHARACTERS: CharacterDef[] = [
       cooldown: 3,
     },
     price: 350, startsUnlocked: false, music: 'been-here-before.mp3', idleFx: null,
+    listen: 'https://open.spotify.com/track/4SXbB3dcKuv0cTL1jDQkTq',
     specialLines: ['BEGGING FOR MORE?'],
     hitLines: ['PEDAL TO THE FLOOR.'],
     hitLineChance: 0.35,

@@ -54,6 +54,17 @@ export function rosterGrid(scene: Phaser.Scene, items: RosterItem[], dim: (it: R
   });
 }
 
+/** Opens a link in a new tab (a real anchor click, which works inside the artifact viewer too). */
+export function openLink(url: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
 /** Right-hand panel with the full stats for one song. */
 export class DetailPanel {
   private parts: Phaser.GameObjects.GameObject[] = [];
@@ -82,6 +93,12 @@ export class DetailPanel {
 
     const c = item.c;
     const spr = add(s.add.sprite(x + 24, y + 64, c.id, 'f0').setOrigin(0.5, 1).setScale(3));
+    if (c.listen) {
+      // real link to the song: opened on pointerup so the browser treats it as a click
+      const lb = add(s.add.rectangle(x - 2, y + 64, 52, 10, 0x1db954).setOrigin(0).setStrokeStyle(1, 0x0b0710));
+      add(txt(s, x + 24, y + 69, 'LISTEN', 8, '#0b0710').setOrigin(0.5).setScale(0.75));
+      lb.setInteractive({ useHandCursor: true }).on('pointerup', () => openLink(c.listen!));
+    }
     spr.play(`${c.id}-idle`);
     add(txt(s, x + 58, y + 6, c.name.toUpperCase(), 8).setWordWrapWidth(PANEL_W - 70, true).setLineSpacing(3));
     add(txt(s, x + 58, y + 40, c.archetype, 8, css(COLORS.cyan)));
