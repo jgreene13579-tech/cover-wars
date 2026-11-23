@@ -4,7 +4,7 @@ import type { CharacterDef } from '../data/characters';
 import { txt } from './text';
 import { loadSave } from '../save';
 import { MAX_LEVEL, boostedStats, xpToNext } from '../data/progress';
-import { upgradedWeapon } from '../data/upgrades';
+import { bonusHp, upgradedWeapon } from '../data/upgrades';
 
 /** A song on the roster: a playable character, or an album track still to come. */
 export type RosterItem = { c: CharacterDef; soon?: undefined } | { c?: undefined; soon: string };
@@ -113,7 +113,8 @@ export class DetailPanel {
       add(s.add.rectangle(bx, y + 54, Math.round(bw * (prog?.xp ?? 0) / xpToNext(lvl)), 4, COLORS.cyan).setOrigin(0));
     }
     let ty = y + 74;
-    add(txt(s, x, ty, `HP ${st.hp}  AIM ${st.aim}  MOVE ${c.move}`, 8, prog && (prog.hp || prog.aim) ? css(COLORS.green) : '#c8c0d8')); ty += 16;
+    const hp = st.hp + bonusHp(save);
+    add(txt(s, x, ty, `HP ${hp}  AIM ${st.aim}  MOVE ${c.move}`, 8, hp !== c.hp || st.aim !== c.aim ? css(COLORS.green) : '#c8c0d8')); ty += 16;
     add(txt(s, x, ty, c.weapon.name, 8)); ty += 12;
     const w = upgradedWeapon(st.weapon, save);
     add(txt(s, x, ty, `DMG ${w.dmg[0]}-${w.dmg[1]}${w.shots > 1 ? ' x' + w.shots : ''}  RANGE ${w.range}`, 8, '#c8c0d8')); ty += 12;

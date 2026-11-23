@@ -3,6 +3,7 @@ import { COLORS, GAME_W, css } from '../config';
 import { CHARACTERS, getCharacter } from '../data/characters';
 import { MISSIONS, winBonus } from '../data/missions';
 import { MAX_LEVEL, addXp, xpFor, xpToNext } from '../data/progress';
+import { coinMultiplier } from '../data/upgrades';
 import { loadSave, pendingLevelUps, progressFor, writeSave } from '../save';
 import { Button } from '../ui/Button';
 import { txt } from '../ui/text';
@@ -31,9 +32,14 @@ export class ResultsScene extends Phaser.Scene {
     if (d.victory) lines.push([`${MISSIONS[mi].venue} BONUS`, winBonus(mi)]);
     lines.push([`KNOCKOUTS ${d.kills} x ${REWARD.perKill}`, d.kills * REWARD.perKill]);
     if (d.victory) lines.push([`STANDING ${d.survivors} x ${REWARD.perSurvivor}`, d.survivors * REWARD.perSurvivor]);
+    const save = loadSave();
+    const mult = coinMultiplier(save);
+    if (mult > 1) {
+      const base = lines.reduce((a, [, n]) => a + n, 0);
+      lines.push([`MERCH SALES +${Math.round((mult - 1) * 100)}%`, Math.round(base * (mult - 1))]);
+    }
     const earned = lines.reduce((a, [, n]) => a + n, 0);
 
-    const save = loadSave();
     const before = save.coins;
     save.coins += earned;
     if (d.victory) save.wins++;

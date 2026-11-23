@@ -12,7 +12,7 @@ import { NPCS } from '../data/npcs';
 import { ENEMY_INTROS } from '../data/intros';
 import { loadSave, loadSeen, markSeen } from '../save';
 import { boostedStats, enemyVeterancy } from '../data/progress';
-import { actionsPerTurn, upgradedWeapon } from '../data/upgrades';
+import { actionsPerTurn, bonusHp, hasSecondWind, specialCooldown, upgradedWeapon } from '../data/upgrades';
 import { THEMES, Theme, buildVenue, venueTile } from '../art/venues';
 import { Hud, HudState } from '../ui/Hud';
 import { txt } from '../ui/text';
@@ -101,6 +101,8 @@ export class MissionScene extends Phaser.Scene {
   kills = 0;
   killsBy: Record<string, number> = {}; // knockouts per band member, for XP
   baseAp = 2; // actions per turn (3 with the Extra Action upgrade)
+  upgradeSave: { upgrades: Record<string, number> } = { upgrades: {} };
+  secondWindReady = false; // Second Wind upgrade: one free get-up per show
   squad: string[] = [];
   missionIndex = 0;
   mission!: MissionDef;
@@ -210,6 +212,8 @@ export class MissionScene extends Phaser.Scene {
     const vet = enemyVeterancy(this.missionIndex);
     const save = loadSave();
     this.baseAp = actionsPerTurn(save);
+    this.upgradeSave = save;
+    this.secondWindReady = hasSecondWind(save);
     rows.forEach((r, y) => [...r].forEach((ch, x) => {
       if (ch === 'P') spawns.push({ x, y });
       const eid = ENEMY_CHARS[ch];
@@ -227,7 +231,7 @@ export class MissionScene extends Phaser.Scene {
       const st = boostedStats(c, save.progress[id]);
       this.units.push(new Unit(this, this.world, {
         id: c.id, team: 'player', name: c.short, archetype: c.archetype,
-        hp: st.hp, aim: st.aim, move: c.move, weapon: upgradedWeapon(st.weapon, save), special: c.special,
+        hp: st.hp + bonusHp(save), aim: st.aim, move: c.move, weapon: upgradedWeapon(st.weapon, save), special: c.special,
         tex: c.id, x: spawns[i].x, y: spawns[i].y, idleFx: c.idleFx,
       }));
     });
@@ -1024,7 +1028,7 @@ export class MissionScene extends Phaser.Scene {
       }
     } else if (p.kind === 'special' && u.special) {
       this.tutorial('special');
-      u.cooldown = u.special.cooldown;
+      u.cooldown = specialCooldown(u.special.cooldown, this.upgradeSave);
       const afterLine = getCharacter(u.id)?.specialLines;
       this.quietComebacks = !!afterLine?.length; // their own line wins over knockout chatter
       switch (u.special.kind) {
@@ -1346,6 +1350,16 @@ export class MissionScene extends Phaser.Scene {
   }
 
   kill(u: Unit) {
+    if (u.isPlayer && !u.decoy && this.secondWindReady) {
+      // Second Wind: the first song to go down gets right back up
+      this.secondWindReady = false;
+      u.hp = Math.min(2, u.maxHp);
+      u.drawBar();
+      sfx.rally();
+      this.burst(u.chest().x, u.chest().y, [0x6dff7a, 0xffffff, 0xffd34f], 16, 16, 500);
+      this.popup({ x: u.sprite.x, y: u.sprite.y - 30 }, 'SECOND WIND!', css(COLORS.green));
+      return;
+    }
     u.alive = false;
     if (u.controlledBy) { // the checked-in band member went down: the room is free again
       const hc = u.controlledBy;

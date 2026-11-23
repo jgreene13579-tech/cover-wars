@@ -102,11 +102,12 @@ export class ShopScene extends Phaser.Scene {
 
   private buildUpgrades() {
     const save = loadSave();
-    const x = 10;
-    const w = GAME_W - 20;
-    const rowH = 42;
+    // two columns of cards, read left to right
+    const w = (GAME_W - 30) / 2;
+    const rowH = 50;
     UPGRADES.forEach((u, i) => {
-      const y = 50 + i * (rowH + 2);
+      const x = 10 + (i % 2) * (w + 10);
+      const y = 50 + Math.floor(i / 2) * (rowH + 2);
       const lvl = upgradeLevel(save, u.id);
       const max = u.prices.length;
       const locked = !!u.requires && upgradeLevel(save, u.requires) === 0;
@@ -115,18 +116,18 @@ export class ShopScene extends Phaser.Scene {
       const top = u.id === 'ap';
       this.add.rectangle(x, y, w, rowH, top ? 0x2a1438 : COLORS.panel, 0.95).setOrigin(0)
         .setStrokeStyle(2, maxed ? COLORS.green : top ? COLORS.gold : COLORS.border);
-      txt(this, x + 10, y + 7, u.name, 8, maxed ? css(COLORS.green) : top ? css(COLORS.gold) : '#ffffff');
+      const name = txt(this, x + 8, y + 6, u.name, 8, maxed ? css(COLORS.green) : top ? css(COLORS.gold) : '#ffffff');
       // level pips
       for (let k = 0; k < max; k++) {
-        this.add.rectangle(x + 150 + k * 12, y + 7, 9, 8, k < lvl ? COLORS.cyan : 0x0b0710).setOrigin(0).setStrokeStyle(1, COLORS.border);
+        this.add.rectangle(x + 14 + name.width + k * 11, y + 6, 8, 8, k < lvl ? COLORS.cyan : 0x0b0710).setOrigin(0).setStrokeStyle(1, COLORS.border);
       }
-      const desc = txt(this, x + 10, y + 22, locked ? `NEEDS ${this.nameOf(u.requires!)} FIRST. ${u.desc}` : u.desc, 8, css(COLORS.gray)).setScale(0.75);
-      const room = w - 180;
-      if (desc.displayWidth > room) desc.setScale((0.75 * room) / desc.displayWidth);
+      const room = w - 128;
+      txt(this, x + 8, y + 20, locked ? `NEEDS ${this.nameOf(u.requires!)} FIRST. ${u.desc}` : u.desc, 8, css(COLORS.gray))
+        .setScale(0.75).setWordWrapWidth(room / 0.75, true).setLineSpacing(3);
 
       const label = maxed ? 'OWNED' : locked ? 'LOCKED' : `${max > 1 ? `LV ${lvl + 1}: ` : ''}${price}`;
       const can = !maxed && !locked && save.coins >= price;
-      const b = new Button(this, x + w - 160, y + 9, 150, 24, label, () => this.buyUpgrade(u),
+      const b = new Button(this, x + w - 112, y + 14, 104, 22, label, () => this.buyUpgrade(u),
         maxed ? {} : { fill: 0x5a1838, border: COLORS.gold });
       b.setEnabled(can);
     });

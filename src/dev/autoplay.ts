@@ -30,7 +30,7 @@ async function until(fn: () => boolean, timeout = 180000) {
 const SPEED = 25;
 const BUY_ORDER = ['toast', 'mindfully-blind', 'never-heard', 'wreck', 'vision', 'pen-and-paper', 'glass-slipper',
   'indy-blvd', 'fire-sale', 'no-running', 'crown', 'electric-ones', 'been-here-before', 'distraction'];
-const UPGRADE_ORDER = ['squad5', 'dmg-auto', 'dmg-close', 'squad6', 'dmg-spec', 'ap'];
+const UPGRADE_ORDER = ['kevlar', 'squad5', 'merch', 'dmg-auto', 'cd', 'dmg-close', 'squad6', 'secondwind', 'dmg-spec', 'ap'];
 
 function shotValue(m: Scene, u: Unit, from: Pos, e: Unit) {
   if (!canTarget(m.grid, u, from, e)) return 0;
